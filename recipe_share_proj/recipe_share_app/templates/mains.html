@@ -1,24 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mains</title>
-</head>
-<body>
-    <h1>here's the mains page</h1>
+{% extends 'base.html' %}
 
-    <p>{% for recipe in recipes %}
-        <h2>{{ recipe.name }}</h2>
-        <p>{{ recipe.ingredients }}</p>
-        <p>{{ recipe.instructions }}</p>
+{% block title %}Mains - Recipe Sharing Platform{% endblock %}
+
+{% block content %}
+<h1>Mains</h1>
+<ul>
+    {% for recipe in recipes %}
+        <li>
+            <strong>{{ recipe.name }}</strong> - Created on {{ recipe.date_created|date:"M d, Y" }}
+            <p>{{ recipe.ingredients }}</p>
+        </li>
     {% endfor %}
-    </p>
-    <nav>
-        <a href="{% url 'starters' %}">Starters</a>
-        <a href="{% url 'mains' %}">Mains</a>
-        <a href="{% url 'desserts' %}">Desserts</a>
-        <a href="{% url 'add_recipe' %}">Add recipe</a>
-    </nav>
-    </body>
-</html>
+</ul>
+{% endblock %}

@@ -1,17 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add recipe</title>
-</head>
-<body>
-    <h1>here's the add recipe page</h1>
-    <nav>
-        <a href="{% url 'starters' %}">Starters</a>
-        <a href="{% url 'mains' %}">Mains</a>
-        <a href="{% url 'desserts' %}">Desserts</a>
-        <a href="{% url 'add_recipe' %}">Add recipe</a>
-    </nav>
-    </body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Add a New Recipe</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Recipe</button>
+</form>
+{% endblock %}
+
