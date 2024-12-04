@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from.models import Recipe
 # Create your views here.
 # home page
 def index(request):
@@ -11,7 +11,8 @@ def starters(request):
 
 # mains page
 def mains(request):
-    return render(request, 'mains.html')
+    recipes = Recipe.objects.filter(category='Mains')
+    return render(request, 'mains.html', {'recipes': recipes})
 
 # deserts page
 def desserts(request):
