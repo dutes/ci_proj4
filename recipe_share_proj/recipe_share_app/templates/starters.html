@@ -7,6 +7,7 @@
 <ul>
     {% for recipe in recipes %}
         <li>
+            <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" style="width: 100px; height: 100px;">
             <strong>{{ recipe.name }}</strong> - Created on {{ recipe.date_created|date:"M d, Y" }}
             <p>{{ recipe.ingredients }}</p>
         </li>
