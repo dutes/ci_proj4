@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # for heroku deployment
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -144,4 +145,6 @@ GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
 #Media storage url
 MEDIA_URL =  f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
 
-
+import django_heroku
+django_heroku.settings(locals()) # for heroku deployment
+ALLOWED_HOSTS = ['recipe_share_app.herokuapp.com'] # for heroku deployment
