@@ -12,8 +12,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
 from google.oauth2 import service_account
-import google.auth
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,13 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x7w9j55m+_+)y2d-!4@f&!7s8*a7_6#c2r^@!%#kf^$aa&s1pq'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -82,11 +79,11 @@ WSGI_APPLICATION = 'recipe_sharing_platform.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'recipe_sharing_db',
-        'USER': 'recipe_user',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': config('DB_NAME', default='recipe_share_db'),
+        'USER': config('USER', default='recipe_user'),
+        'PASSWORD': config('DB_PASSWORD', default='password'),
+        'HOST': config('DB_HOST',default='localhost'),
+        'PORT': config('DB_PORT',default='5432'),
     }
 }
 
@@ -129,6 +126,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+ # for heroku deployment
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -138,13 +139,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #GCS congiguration
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 GS_BUCKET_NAME = 'my-recipe-images'
-GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+GOOGLE_APPLICATION_CREDENTIALS = config('GOOGLE_APPLICATION_CREDENTIALS')
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(GOOGLE_APPLICATION_CREDENTIALS
 )
-
-#Media storage url
-MEDIA_URL =  f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
+if DEBUG:
+    #Media storage url for DEV
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+else:
+    #Media storage url for PROD
+    MEDIA_URL =  f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
 
 import django_heroku
-django_heroku.settings(locals()) # for heroku deployment
-ALLOWED_HOSTS = ['recipe_share_app.herokuapp.com'] # for heroku deployment
+django_heroku.settings(locals()) 
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1').split(',')
+
+
