@@ -113,6 +113,7 @@ if GOOGLE_APPLICATION_CREDENTIALS_BASE64:
     google_creds_path = os.path.join(BASE_DIR, 'google-credentials.json')
     with open(google_creds_path, 'wb') as creds_file:
         creds_file.write(base64.b64decode(GOOGLE_APPLICATION_CREDENTIALS_BASE64))
+    print(f'Google Cloud Storage credentials saved to {google_creds_path}')
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(google_creds_path)
 else:
     raise Exception("GOOGLE_APPLICATION_CREDENTIALS_BASE64 not found in environment variables.")
