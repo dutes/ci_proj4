@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+import base64
 from decouple import config
 from google.oauth2 import service_account
 
@@ -135,11 +136,16 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+#decode google credentials base64 stirng uploaded to the project on heroku
+google_creds+base64 = os.getenv('GOOGLE_APPLICATION_CREDENTIALS_BASE64')
+if google_creds_base64:
+    with open('google-credentials.json', 'w') as f:
+        f.write(base64.b64decode(google_creds_base64).decode("utf-8"))
 
 #GCS congiguration
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 GS_BUCKET_NAME = 'my-recipe-images'
-GOOGLE_APPLICATION_CREDENTIALS = config('GOOGLE_APPLICATION_CREDENTIALS')
+GOOGLE_APPLICATION_CREDENTIALS ="google-credentials.json"
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(GOOGLE_APPLICATION_CREDENTIALS
 )
 if DEBUG:
@@ -154,4 +160,8 @@ import django_heroku
 django_heroku.settings(locals()) 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1').split(',')
 
+import dj_database_url
+DATABASES = {
+    'default': dj_database_url.config(default=config('DATABASE_URL'))
+}
 
