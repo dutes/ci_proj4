@@ -68,7 +68,7 @@ WSGI_APPLICATION = 'recipe_sharing_platform.wsgi.application'
 
 # Database configuration
 DATABASES = {
-    'default': dj_database_url.config(default=config('DATABASE_URL', default='sqlite:///db.sqlite3'))
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
 
 # Password validation
