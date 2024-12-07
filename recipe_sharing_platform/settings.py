@@ -137,7 +137,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #decode google credentials base64 stirng uploaded to the project on heroku
-google_creds+base64 = os.getenv('GOOGLE_APPLICATION_CREDENTIALS_BASE64')
+google_creds_base64 = os.getenv('GOOGLE_APPLICATION_CREDENTIALS_BASE64')
 if google_creds_base64:
     with open('google-credentials.json', 'w') as f:
         f.write(base64.b64decode(google_creds_base64).decode("utf-8"))
