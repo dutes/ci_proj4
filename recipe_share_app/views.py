@@ -42,4 +42,4 @@ def delete_view(request):
         return redirect('index')
     
     recipes = Recipe.objects.all()
-    return render(request, 'delete_view.html', {'recipes': recipes})
+    return render(request, 'delete.html', {'recipes': recipes})
