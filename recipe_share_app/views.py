@@ -34,7 +34,7 @@ def add_recipe(request):
     return render(request, 'add_recipe.html', {'form': form})
 
 # delete recipe page
-def delete_view(request):
+def delete(request):
     if request.method == 'POST':
         selected_recipes = request.POST.getlist("recipies_to_delete")
         Recipe.objects.filter(id__in=selected_recipes).delete()
