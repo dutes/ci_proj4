@@ -32,3 +32,14 @@ def add_recipe(request):
         form = RecipeForm()
     print("this is the for, ", form)#debugging
     return render(request, 'add_recipe.html', {'form': form})
+
+# delete recipe page
+def delete_view(request):
+    if request.method == 'POST':
+        selected_recipes = request.POST.getlist("recipies_to_delete")
+        Recipe.objects.filter(id__in=selected_recipes).delete()
+        messages.success(request, 'Selected recipes have been deleted')
+        return redirect('index')
+    
+    recipes = Recipe.objects.all()
+    return render(request, 'delete_view.html', {'recipes': recipes})
