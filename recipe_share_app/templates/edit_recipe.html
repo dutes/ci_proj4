@@ -105,7 +105,12 @@
                 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
             },
         })
-        .then(response => response.json())
+        .then(response => 
+        if (!response.ok) {
+            throw new Error(`HTTP erro! status: ' + ${response.status}`);
+        }   
+        return response.json())
+    })
         .then(data => {
             console.log('Server response:', data);
 

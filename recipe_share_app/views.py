@@ -77,7 +77,12 @@ def edit(request, recipe_id):
         form = RecipeForm(request.POST, request.FILES, instance=recipe)
         if form.is_valid():
             form.save()
-            return redirect('edit_recipe')  # Redirect to the edit page
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True, 'message': 'recipe updated successfully'})
+            return redirect('edit_recipe')
+        else:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'errors': form.errors}, status=400)  #debugging
     else:
         # For GET requests, return recipe details
         form = RecipeForm(instance=recipe)
