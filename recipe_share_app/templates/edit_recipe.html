@@ -3,31 +3,29 @@
 {% block content %}
 <h1>Edit Recipe</h1>
 
-<form method="POST" action="{% url 'update_recipe' %}">
-    {% csrf_token %}
-    <ul>
-        {% for recipe in recipes %}
-        <li>
-            <input type="checkbox" name="recipe_id" value="{{ recipe.id }}">
-            {{ recipe.name }}
-        </li>
-        {% endfor %}
-    </ul>
-    <button type="button" id="edit-button">Edit selected</button>
-</form>
+<ul>
+    {% for recipe in recipes %}
+    <li>
+        <input type="checkbox" class="select-recipe" name="recipe_id" value="{{ recipe.id }}">
+        {{ recipe.name }}
+    </li>
+    {% endfor %}
+</ul>
+
+<button id="edit-button">Edit selected</button>
 
 <!--modal-->
 <div id="edit-modal" style="display: none;">
-    <form id="edit-form" method="POST" action="{% url 'update_recipe' %}">
+    <form id="edit-form" method="POST" action="">
         {% csrf_token %}
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="{{ recipe.name }}">
+        <input type="text" id="name" name="name">
 
         <label for="ingredients">Ingredients:</label>
-        <textarea id="ingredients" name="ingredients">{{ recipe.ingredients }}</textarea>
+        <textarea id="ingredients" name="ingredients"></textarea>
 
         <label for="instructions">Instructions:</label>
-        <textarea id="instructions" name="instructions">{{ recipe.instructions }}</textarea>
+        <textarea id="instructions" name="instructions"></textarea>
 
         <label for="recipe-category">Category:</label>
         <select id="recipe-category" name="category">
@@ -55,16 +53,19 @@
     const recipeCategory=document.getElementById('category'); 
     
     editButton.addEventListener('click', ()=> {
-        const selectedCheckbox = document.querySelector('input[name="recipe_id"]:checked');
-            if (!selectedCheckbox) {
+        const selectedCheckbox = document.querySelector('.select-recipe:checked');
+            if (selectedCheckbox === 0) {
                 alert('Please select a recipe to edit');
                 return;
             }
-        
+            if (selectedCheckbox.length > 1) {
+                alert('Please select only one recipe to edit');
+                return;
+            }        
 
         const recipeId = selectedCheckbox.value;
 
-        fetch(`/recipe/${recipeId}`)
+        fetch(`/recipe_details/${recipeId}/`)
             .then(response => response.json())
             .then(data => {
                 recipeName.value = data.name;
@@ -72,11 +73,13 @@
                 recipeInstructions.value = data.instructions;
                 recipeCategory.value = data.category;
 
-                editForm.action = `/edit/${recipeId}`;
+                editForm.action = `/edit/${recipeId}/`;
 
                 modal.style.display = 'block';
-                overlay.style.display = 'block';
-
+            })
+            .catch(error => {
+                alert('Error fetching recipe details');
+                console.error('Error:', error);
             });
 
     });
