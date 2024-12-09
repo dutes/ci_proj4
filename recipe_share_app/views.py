@@ -44,3 +44,20 @@ def delete(request):
     
     recipes = Recipe.objects.all()
     return render(request, 'delete.html', {'recipes': recipes})
+
+
+# edit recipe page
+def edit_recipe(request):
+    recipies= Recipe.objects.all()
+    return render(request, 'edit_recipe.html', {'recipies': recipies})
+
+def edit(request, recipe_id):
+    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    form = RecipeForm(request.POST, request.FILES, instance=recipe)
+    if form.is_valid():
+        form.save()
+        return redirect('index')
+    else:
+        form = RecipeForm(instance=recipe)
+    return render(request, 'edit_recipe.html', {'form': form, 'recipe': recipe}) 
+

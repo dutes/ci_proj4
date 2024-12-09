@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Edit Recipe</h1>
+
+<div style = "position: relative; padding-bottom: 60px;">
+    <ul>
+        {% for recipe in recipes %}
+        <li>
+            <input type="checkbox" class="select-recipe" value="{{ recipe.id }}">
+            {{ recipe.name }}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+<div style="postion: fixed; bottom: 0; width: 100%; background-color: grey; padding: 10px; text-align: center;">
+    <button id="edit-button">Edit selected</button>
+</div>
+
+<script>
+    const editButton = document.getElementById('edit-button');
+    let selectedRecipes = [];
+
+    editButton.addEventListener('click', () => {
+        const selectedCheckboxes = document.querySelectorAll('.select-recipe:checked');
+        selectedRecipes = Array.from(selectedCheckboxes).map(cb => cb.value);
+
+        if (selectedRecipes.length === 0) {
+            alert('Please select at least one recipe to edit');
+        } else if (selectedRecipes.length > 1) {
+            alert('Please select only one recipe to edit');
+        } else {
+            window.location.href = `/edit/${selectedRecipes[0]}`;
+        }
+    });
+
+    editButton.addEventListener('click', () => {
+        if (selectedRecipes) {
+            window.location.href = `/edit/${selectedRecipes[0]}`;
+        }
+  
+  });
+</script>
+{% endblock %}
