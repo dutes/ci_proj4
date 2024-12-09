@@ -14,7 +14,7 @@
 
 <button id="edit-button">Edit selected</button>
 
-<!--modal-->
+<!-- Modal -->
 <div id="edit-modal" style="display: none;">
     <form id="edit-form" method="POST" action="">
         {% csrf_token %}
@@ -29,9 +29,9 @@
 
         <label for="category">Category:</label>
         <select id="category" name="category">
-            <option value="starters">Starters</option>
-            <option value="mains">Mains</option>
-            <option value="desserts">Desserts</option>
+            <option value="Starters">Starters</option>
+            <option value="Mains">Mains</option>
+            <option value="Desserts">Desserts</option>
         </select>
 
         <button type="submit">Save</button>
@@ -39,30 +39,26 @@
     </form>
 </div>
 
-<div id="" overlay style="display: none; position: fixed; width: 100%;z-index: 999"></div>
+<div id="overlay" style="display: none; position: fixed; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
 
-<script> 
+<script>
     console.log('edit recipe script loaded');
-    const editButton=document.getElementById('edit-button'); 
-    const modal=document.getElementById('edit-modal');
-    const overlay=document.getElementById('overlay'); 
-    const cancelEdit=document.getElementById('cancel-edit'); 
-    const editForm=document.getElementById('edit-form'); 
-    const recipeName=document.getElementById('name'); 
-    const recipeIngredients=document.getElementById('ingredients'); 
-    const recipeInstructions=document.getElementById('instructions'); 
-    const recipeCategory=document.getElementById('category'); 
-    
-    editButton.addEventListener('click', ()=> {
+    const editButton = document.getElementById('edit-button');
+    const modal = document.getElementById('edit-modal');
+    const overlay = document.getElementById('overlay');
+    const cancelEdit = document.getElementById('cancel-edit');
+    const editForm = document.getElementById('edit-form');
+    const recipeName = document.getElementById('name');
+    const recipeIngredients = document.getElementById('ingredients');
+    const recipeInstructions = document.getElementById('instructions');
+    const recipeCategory = document.getElementById('category');
+
+    editButton.addEventListener('click', () => {
         const selectedCheckbox = document.querySelector('.select-recipe:checked');
-            if (selectedCheckbox === 0) {
-                alert('Please select a recipe to edit');
-                return;
-            }
-            if (selectedCheckbox.length > 1) {
-                alert('Please select only one recipe to edit');
-                return;
-            }        
+        if (!selectedCheckbox) {
+            alert('Please select a recipe to edit');
+            return;
+        }
 
         const recipeId = selectedCheckbox.value;
 
@@ -82,19 +78,48 @@
                 editForm.action = `/edit/${recipeId}/`;
 
                 modal.style.display = 'block';
+                overlay.style.display = 'block';
             })
             .catch(error => {
                 alert('Error fetching recipe details');
                 console.error('Error:', error);
             });
-
     });
 
     cancelEdit.addEventListener('click', () => {
         modal.style.display = 'none';
         overlay.style.display = 'none';
     });
+
+    editForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(editForm);
+
+        console.log('Submitting form data:', [...formData.entries()]);
+
+        fetch(editForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Server response:', data);
+
+            if (data.success) {
+                alert('Recipe updated successfully!');
+                window.location.reload();
+            } else {
+                alert('Error: ' + JSON.stringify(data.errors));
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            alert('An unexpected error occurred.');
+        });
+    });
 </script>
-
-
 {% endblock %}
