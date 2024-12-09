@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from.models import Recipe
 from recipe_share_app.forms import RecipeForm
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+
 # Create your views here.
 # home page
 def index(request):
@@ -45,19 +48,39 @@ def delete(request):
     recipes = Recipe.objects.all()
     return render(request, 'delete.html', {'recipes': recipes})
 
+# recipe details page for editing
+def recipe_details(request, recipe_id):
+    try:
+        recipe = Recipe.objects.get(id=recipe_id)
+        data= {
+            "name": recipe.name,
+            "ingredients": recipe.ingredients, 
+            "instructions": recipe.instructions,
+            "category": recipe.category,
+        }
+        return JsonResponse(data)
+    except Recipe.DoesNotExist:
+        return JsonResponse({"error": "Recipe not found."}, status=404)
 
-# edit recipe page
+# edit recipe 
 def edit_recipe(request):
-    recipies= Recipe.objects.all()
-    return render(request, 'edit_recipe.html', {'recipies': recipies})
+    recipes = Recipe.objects.all()  # Fix typo
+    return render(request, 'edit_recipe.html', {'recipes': recipes})
 
+# update recipe page
 def edit(request, recipe_id):
+    # Fetch the recipe or return a 404 error if not found
     recipe = get_object_or_404(Recipe, pk=recipe_id)
-    form = RecipeForm(request.POST, request.FILES, instance=recipe)
-    if form.is_valid():
-        form.save()
-        return redirect('index')
+
+    if request.method == 'POST':
+        # Handle form submission
+        form = RecipeForm(request.POST, request.FILES, instance=recipe)
+        if form.is_valid():
+            form.save()
+            return redirect('edit_recipe')  # Redirect to the edit page
     else:
+        # For GET requests, return recipe details
         form = RecipeForm(instance=recipe)
-    return render(request, 'edit_recipe.html', {'form': form, 'recipe': recipe}) 
+
+    return render(request, 'edit_recipe.html', {'form': form, 'recipe': recipe})
 

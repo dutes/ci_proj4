@@ -9,4 +9,6 @@ urlpatterns = [
     path('add_recipe/', views.add_recipe, name='add_recipe'), # path for the add recipe page
     path('delete/', views.delete, name='delete'), # path for the delete recipe page
     path('edit_recipe/', views.edit_recipe, name='edit_recipe'), # path for the edit recipe page
+    path('recipe_details/<int:recipe_id>/', views.recipe_details, name='recipe_details'), # path for the recipe details page
+    path('edit/<int:recipe_id>/', views.edit, name='update_recipe'), # path for the edit recipe page
 ]
