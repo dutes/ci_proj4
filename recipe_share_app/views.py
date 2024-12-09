@@ -36,9 +36,10 @@ def add_recipe(request):
 # delete recipe page
 def delete(request):
     if request.method == 'POST':
-        selected_recipes = request.POST.getlist("recipies_to_delete")
-        Recipe.objects.filter(id__in=selected_recipes).delete()
-        messages.success(request, 'Selected recipes have been deleted')
+        recipe_ids = request.POST.getlist("recipe_id")
+        if recipe_ids:
+            Recipe.objects.filter(id__in=recipe_ids).delete()
+            messages.success(request, 'Selected recipes have been deleted')
         return redirect('index')
     
     recipes = Recipe.objects.all()

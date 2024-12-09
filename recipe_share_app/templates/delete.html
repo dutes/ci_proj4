@@ -12,7 +12,7 @@
         </li>
         {% endfor %}
     </ul>
-    <button type="button" is="delte-button">Delete selected</button>
+    <button type="submit" id="delte-button">Delete selected</button>
 </form>
 
 <!--modal-->
@@ -22,11 +22,10 @@
     <button id="cancel-delete" type="button">No</button>
 </div>
 
-<!--script to delete the selected-->
+
 <script>
     const deleteButton = document.getElementById('delete-button');
     const modal = document.getElementById('delete-modal');
-    const confirmDelete = document.getElementById('confirm-delete');
     const cancelDelete = document.getElementById('cancel-delete');
 
     deleteButton.addEventListener('click', () => {
