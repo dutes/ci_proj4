@@ -66,6 +66,7 @@
             fetch(`/edit_recipe/details/${recipeId}/`)
                 .then(response => response.json())
                 .then(data => {
+                    console.log('recieved recipe data: ', data); //debugging
                     nameField.value = data.name;
                     ingredientsField.value = data.ingredients;
                     instructionsField.value = data.instructions;
@@ -80,10 +81,12 @@
                     }
 
                     editForm.action = `/edit_recipe/update/${recipeId}/`;
-
+                    overlay.style.display = 'block';
                     modal.style.display = 'block';
                 })
-                .catch(error => alert('An error occured getting recipe details'));
+                .catch(error => {
+                    console.error('fetch erro ', error); //debugging
+                    alert('An error occured getting recipe details'));
         });
     });
 
