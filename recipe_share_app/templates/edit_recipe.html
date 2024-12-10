@@ -64,7 +64,12 @@
             const recipeId = button.getAttribute('data-recipe-id');
 
             fetch(`/edit_recipe/details/${recipeId}/`)
-                .then(response => response.json())
+                .then(response => {
+                    console.log('response: ', response.status); //debugging
+                    if (!response.ok) {
+                        throw new Error('http error: ' + response.status);
+                    }
+                    response.json())
                 .then(data => {
                     console.log('recieved recipe data: ', data); //debugging
                     nameField.value = data.name;
@@ -86,7 +91,7 @@
                 })
                 .catch(error => {
                     console.error('fetch erro ', error); //debugging
-                    alert('An error occured getting recipe details'));
+                    alert('An error occured getting recipe details');
         });
     });
 
