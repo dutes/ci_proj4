@@ -54,7 +54,6 @@ def recipe_details(request, recipe_id):
         recipe = get_object_or_404(Recipe, pk=recipe_id)
         data = {
             "name": recipe.name,
-            "image": recipe.image.url if recipe.image else "",
             "ingredients": recipe.ingredients,
             "instructions": recipe.instructions,
             "category": recipe.category,
