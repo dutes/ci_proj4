@@ -69,7 +69,7 @@
                     if (!response.ok) {
                         throw new Error('http error: ' + response.status);
                     }
-                    response.json())
+                    response.json()
                 .then(data => {
                     console.log('recieved recipe data: ', data); //debugging
                     nameField.value = data.name;
