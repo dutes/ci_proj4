@@ -16,6 +16,14 @@
 <div id="edit-modal" style="display: none;">
     <form id="edit-form" method="POST">
         {% csrf_token %}
+        <!--show current image in list-->
+        <label for="image">Current image: </label>
+        <img id="current-inmage" src="" alt="Recipe image" style="max-width: 200px; max-height: 200px; display: block;">
+
+        <!--allow user to upload a new image-->
+        <label for="image">Current image: </label>
+        <input type="file" name="image" id="image">
+
         <label for="name">Name: </label>
         <input type="text" name="name" id="name">
 
