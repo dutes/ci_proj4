@@ -6,19 +6,24 @@
 <ul>
     {% for recipe in recipes %}
     <li>
+        <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" style="width: 100px; height: 100px;">
         <span>{{ recipe.name }}</span>
         <button class="edit-button" data-recipe-id="{{ recipe.id }}">Edit</button>
     </li>
     {% endfor %}
 </ul>
 
+<!--semi transparent underlay for edit mode-->
+<div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100px; height: 100px; background-color: rgba(0, 0, 0, 0.5);"></div>
+
 <!--modal to actually edit recipes-->
 <div id="edit-modal" style="display: none;">
     <form id="edit-form" method="POST">
         {% csrf_token %}
+
         <!--show current image in list-->
         <label for="image">Current image: </label>
-        <img id="current-inmage" src="" alt="Recipe image" style="max-width: 200px; max-height: 200px; display: block;">
+        <img id="current-image" src="" alt="current recipe image" style="width: 100px; height: 100px;">
 
         <!--allow user to upload a new image-->
         <label for="image">Current image: </label>
@@ -65,6 +70,15 @@
                     ingredientsField.value = data.ingredients;
                     instructionsField.value = data.instructions;
                     categoryField.value = data.category;
+                    // update and display the current image
+                    if (data.image) {
+                        currentImage.src = data.image;
+                        currentImage.style.display = 'block';
+                    } else {
+                        currentImage.src = '';
+                        currentImage.style.display = 'none';
+                    }
+
                     editForm.action = `/edit_recipe/update/${recipeId}/`;
 
                     modal.style.display = 'block';
