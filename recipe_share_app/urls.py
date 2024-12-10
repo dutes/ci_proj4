@@ -11,3 +11,4 @@ urlpatterns = [
     path('edit_recipe/', views.edit_recipe, name='edit_recipe'),  # For listing recipes to edit
     path('edit_recipe/details/<int:recipe_id>/', views.recipe_details, name='recipe_details'),  # Fetch recipe details
     path('edit_recipe/update/<int:recipe_id>/', views.update_recipe, name='update_recipe'),  # Update recipe
+]
