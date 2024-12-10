@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Materialize CSS stylesheet-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Materialize JavaScript-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Recipe Sharing Platform{% endblock %}</title>
@@ -8,29 +13,37 @@
 <body>
     <header>
         <nav>
-            <a href="{% url 'index' %}">Home</a> |
-            <a href="{% url 'starters' %}">Starters</a> |
-            <a href="{% url 'mains' %}">Mains</a> |
-            <a href="{% url 'desserts' %}">Desserts</a> |
-            <a href="{% url 'add_recipe' %}">Add Recipe</a> |
-            <a href="{% url 'delete' %}">Delete Recipes</a> |
-            <a href="{% url 'edit_recipe' %}">Edit a recipe</a>
-        </nav>
+            <div class="nav-wrapper blue">
+                <a href="{% url 'index' %}" class="brand-logo">Recipe Sharing Platform</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                    <li><a href="{% url 'starters' %}">Starters</a></li>
+                    <li><a href="{% url 'mains' %}">Mains</a></li>
+                    <li><a href="{% url 'desserts' %}">Desserts</a></li>
+                    <li><a href="{% url 'add_recipe' %}">Add Recipe</a></li>
+                    <li><a href="{% url 'delete' %}">Delete Recipes</a></li>
+                    <li><a href="{% url 'edit_recipe' %}">Edit a recipe</a></li>
+                </ul>
+            </div>
+       </nav>
     </header>
     <main>
-        <!-- {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}-->
-
         {% block content %}
         {% endblock %}
     </main>
     <footer>
         <p>&copy; 2024 Recipe Sharing Platform</p>
     </footer>
+    <!--Initialize materialize-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var modals = document.querySelectorAll('.modal');
+            M.AutoInit();
+        var selects = document.querySelectorAll('select');
+        M.FormSelect.init(selects);
+        var textareas = document.querySelectorAll('.materialize-textarea');
+        M.textareaAutoResize(textareas);
+    });
+    </script>
 </body>
 </html>

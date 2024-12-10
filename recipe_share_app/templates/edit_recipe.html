@@ -3,12 +3,12 @@
 {% block content %}
 <h1>Edit Recipes</h1>
 
-<ul>
+<ul class="collection">
     {% for recipe in recipes %}
-    <li>
-        <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" style="width: 100px; height: 100px;">
-        <span>{{ recipe.name }}</span>
-        <button class="edit-button" data-recipe-id="{{ recipe.id }}">Edit</button>
+    <li class="collection-item avatar">
+        <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="circle">
+        <span class="title">{{ recipe.name }}</span>
+        <button class="btn waves-effect waves-light edit-button" data-recipe-id="{{ recipe.id }}">Edit</button>
     </li>
     {% endfor %}
 </ul>
@@ -17,38 +17,44 @@
 <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100px; height: 100px; background-color: rgba(0, 0, 0, 0.5);"></div>
 
 <!--modal to actually edit recipes-->
-<div id="edit-modal" style="display: none;">
-    <form id="edit-form" method="POST">
-        {% csrf_token %}
+<div id="edit-modal" class="modal">
+    <div class="modal-content">
+        <h4>Edit Recipe</h4>
+        <form id="edit-form" method="POST">
+            {% csrf_token %}
+            <div class="input-field">
+                <img id="current-image" src="" alt="current recipe image" style="max-width: 100%; display:none;">
+            </div>
 
-        <!--show current image in list-->
-        <label for="image">Current image: </label>
-        <img id="current-image" src="" alt="current recipe image" style="width: 100px; height: 100px;">
-
-        <!--allow user to upload a new image-->
-        <label for="image">Current image: </label>
-        <input type="file" name="image" id="image">
-
-        <label for="name">Name: </label>
-        <input type="text" name="name" id="name">
-
-        <label for="ingredients">Ingredients: </label>
-        <textarea name="ingredients" id="ingredients"></textarea>
-
-        <label for="instructions">Instructions: </label>
-        <textarea name="instructions" id="instructions"></textarea>
-
-        <label for="category">Category: </label>
-        <select name="category" id="category">
-            <option value="Starters">Starter</option>
-            <option value="Mains">Main</option>
-            <option value="Desserts">Dessert</option>
-        </select>
-
-        <button type="submit">Save</button>
-        <button id="cancel-edit" type="button">Cancel</button>
-    </form>
-</div>
+        <div class="file-field input-field">
+            <div class="btn">
+                <span>File</span>
+                <input type="file" name="image" id="image">
+           </div> 
+           <div class="file-path-wrapper">
+                <input class="file-path validate" type="text" placeholder="Upload a new image">
+            </div>
+        </div>
+        <div class="input-field">
+            <input type="text" name="name" id="name" placeholder="Recipe Name">
+        </div>
+        <div class="input-field">
+            <textarea name="ingredients" id="ingredients" class="materialize-textarea" placeholder="Ingredients"></textarea>
+        </div>
+        <div class="input-field">
+            <textarea name="instructions" id="instructions" class="materialize-textarea" placeholder="Instructions"></textarea>
+        </div>
+        <div class="input-field">
+            <select name="category" id="category">
+                <option value="Starters">Starter</option>
+                <option value="Mains">Main</option>
+                <option value="Desserts">Dessert</option>
+            </select>
+        </div>
+        <button type="submit" class="btn waves-effect waves-light">Save</button>
+        <button type="button" id="cancel-edit" class="btn red lighten-1">Cancel</button>
+        </form>
+        </div>
 
 <script>
     const modal = document.getElementById('edit-modal');
