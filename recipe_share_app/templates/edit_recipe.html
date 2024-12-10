@@ -7,7 +7,7 @@
     {% for recipe in recipes %}
     <li>
         <span>{{ recipe.name }}</span>
-        <button class="edit-button" data-recipe-id="{{ recipe.id }}">Edit</button>"
+        <button class="edit-button" data-recipe-id="{{ recipe.id }}">Edit</button>
     </li>
     {% endfor %}
 </ul>
@@ -50,14 +50,14 @@
         button.addEventListener('click', () => {
             const recipeId = button.getAttribute('data-recipe-id');
 
-            fetch(`/recipe_details/${recipeId}`)
+            fetch(`/edit_recipe/details/${recipeId}/`)
                 .then(response => response.json())
                 .then(data => {
                     nameField.value = data.name;
                     ingredientsField.value = data.ingredients;
                     instructionsField.value = data.instructions;
                     categoryField.value = data.category;
-                    editForm.action = `/update_recipe/${recipeId}`;
+                    editForm.action = `/edit_recipe/update/${recipeId}`;
 
                     modal.style.display = 'block';
                 })
