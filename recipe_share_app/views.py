@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect
-from.models import Recipe
-from recipe_share_app.forms import RecipeForm
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.contrib import messages
+from .models import Recipe
+from .forms import RecipeForm
 
 # Create your views here.
 # home page
@@ -48,44 +48,33 @@ def delete(request):
     recipes = Recipe.objects.all()
     return render(request, 'delete.html', {'recipes': recipes})
 
-# recipe details page for editing
+# get recipes for edit page
 def recipe_details(request, recipe_id):
     try:
-        recipe = Recipe.objects.get(id=recipe_id)
-        data= {
+        recipe = get_object_or_404(Recipe, pk=recipe_id)
+        data = {
             "name": recipe.name,
-            "ingredients": recipe.ingredients, 
+            "ingredients": recipe.ingredients,
             "instructions": recipe.instructions,
             "category": recipe.category,
         }
         return JsonResponse(data)
     except Recipe.DoesNotExist:
-        return JsonResponse({"error": "Recipe not found."}, status=404)
+        return JsonResponse({'error': 'Recipe not found'}, status=404)
 
-# edit recipe 
+# edit recipe page
 def edit_recipe(request):
-    recipes = Recipe.objects.all()  # Fix typo
+    recipes = Recipe.objects.all()
     return render(request, 'edit_recipe.html', {'recipes': recipes})
 
-# update recipe page
-def edit(request, recipe_id):
-    # Fetch the recipe or return a 404 error if not found
-    recipe = get_object_or_404(Recipe, pk=recipe_id)
-
+# update recipe
+def update_recipe(request, recipe_id):
     if request.method == 'POST':
-        # Handle form submission
+        recipe = get_object_or_404(Recipe, pk=recipe_id)
         form = RecipeForm(request.POST, request.FILES, instance=recipe)
         if form.is_valid():
             form.save()
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'success': True, 'message': 'recipe updated successfully'})
-            return redirect('edit_recipe')
+            return JsonResponse({'success': True, 'message': 'Recipe updated successfully'})
         else:
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'success': False, 'errors': form.errors}, status=400)  #debugging
-    else:
-        # For GET requests, return recipe details
-        form = RecipeForm(instance=recipe)
-
-    return render(request, 'edit_recipe.html', {'form': form, 'recipe': recipe})
-
+            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+    return JsonResponse({'error': 'Invalid request'}, status=405)
