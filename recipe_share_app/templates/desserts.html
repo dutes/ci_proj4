@@ -3,14 +3,22 @@
 {% block title %}Desserts - Recipe Sharing Platform{% endblock %}
 
 {% block content %}
-<h2 class = "center-align">Desserts</h2>
+<h2 class="center-align">Desserts</h2>
 <ul class="collapsible">
     {% for recipe in recipes %}
         <li>
-            <div class=""collapsible-header">
-            <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" style="width: 100px; height: 100px; margin-right: 10px">
-            <strong>{{ recipe.name }}</strong> - Created on {{ recipe.date_created|date:"M d, Y" }}
-            <p>{{ recipe.ingredients }}</p>
+            <!-- Setting up recipe card for collapse -->
+            <div class="collapsible-header row" style="margin: 0; display: flex; align-items: center;">
+                <!-- Recipe image -->
+                <div class="col s12 m4">
+                    <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" 
+                         style="width: 100%; height: auto; border-radius: 5px;">
+                </div>
+                <!-- Recipe name and date created -->
+                <div class="col s12 m8">
+                    <h5 style="margin: 0; font-size: 1.5em;">{{ recipe.name }}</h5>
+                    <p style="margin: 0; font-size: 0.9em; color: grey;">Created on {{ recipe.date_created|date:"M d, Y" }}</p>
+                </div>
             </div>
             <div class="collapsible-body">
                 <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>

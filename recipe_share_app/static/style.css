@@ -1,0 +1,11 @@
+/* responsiveness for mobile devices and the recipe cards */
+@media (max-width:600px) {
+    .card.card-image img {
+        width: 100%;
+        height: auto;
+    }
+    .card.card-content {
+        text-align: center;
+    }
+    
+}
