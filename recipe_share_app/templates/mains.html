@@ -7,10 +7,16 @@
 <ul class="collapsible">
     {% for recipe in recipes %}
         <li>
-            <div class=""collapsible-header">
-            <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" style="width: 100px; height: 100px; margin-right: 10px">
-            <strong>{{ recipe.name }}</strong> - Created on {{ recipe.date_created|date:"M d, Y" }}
-            <p>{{ recipe.ingredients }}</p>
+            <!--setting up recipe card for collapse-->
+            <div class="collapsible-header" style="display: flex; align-items: center;">
+                <!--recipe image-->
+                <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}"
+                    style="width: 100px; height: 100px; margin-right: 15px; border-radius: 5px;">
+                <!--recipe name and date created-->
+                <div style="flex-grow: 1;">
+                    <h5 style="margin: 0; font-size: 1.5em;">{{ recipe.name }}</h5>
+                    <p style="margin: 0; font-size: 0.9em; color: grey;"> Created on {{ recipe.date_created|date:"M d, Y" }}</p>
+                </div>
             </div>
             <div class="collapsible-body">
                 <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
