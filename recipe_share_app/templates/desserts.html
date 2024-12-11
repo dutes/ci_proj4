@@ -3,13 +3,19 @@
 {% block title %}Desserts - Recipe Sharing Platform{% endblock %}
 
 {% block content %}
-<h1>Desserts</h1>
-<ul>
+<h2 class = "center-align">Desserts</h2>
+<ul class="collapsible">
     {% for recipe in recipes %}
         <li>
-            <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" style="width: 100px; height: 100px;">
+            <div class=""collapsible-header">
+            <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" style="width: 100px; height: 100px; margin-right: 10px">
             <strong>{{ recipe.name }}</strong> - Created on {{ recipe.date_created|date:"M d, Y" }}
             <p>{{ recipe.ingredients }}</p>
+            </div>
+            <div class="collapsible-body">
+                <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
+                <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
+            </div>
         </li>
     {% endfor %}
 </ul>
