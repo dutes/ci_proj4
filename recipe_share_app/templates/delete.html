@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Delete Recipes</h1>
-<!--list with delte buttons-->
+<!--list with delete buttons-->
 <ul class="collection">
     {% for recipe in recipes %}
     <li class="collection-item avatar">
@@ -25,7 +25,7 @@
     </div>
 </div>
 
-<form id="delte-form" method="POST" action="{% url 'delete' %}">
+<form id="delete-form" method="POST" action="{% url 'delete' %}">
     {% csrf_token %}
     <input type="hidden" name="recipe_id" id="recipe-id-to-delete">
 </form>
