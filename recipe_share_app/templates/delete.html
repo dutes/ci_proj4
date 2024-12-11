@@ -36,10 +36,11 @@
         M.Modal.init(modalElems);
 
         const deleteButtons = document.querySelectorAll('.delete-button');
-        const deleteModal = M.Modal.init(document.getElementById('deletemodal'));
+        const deleteModal = M.Modal.init(document.getElementById('delete-modal'));
         const deleteForm = document.getElementById('delete-form');
         const recipeIdInput = document.getElementById('recipe-id-to-delete');
         const confirmDelete = document.getElementById('confirm-delete');
+
 
         let selectedRecipeId = null;
 
