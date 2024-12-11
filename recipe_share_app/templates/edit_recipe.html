@@ -27,7 +27,7 @@
             </div>
             <div class="file-field input-field">
                 <div class="btn">
-                    <span>File</span>
+                    <span>Upload Image</span>
                     <input type="file" name="image" id="image">
                 </div>
                 <div class="file-path-wrapper">
@@ -80,10 +80,15 @@
                     }
                     response.json()
                 .then(data => {
+                    // populate the form with the recipe details
                     nameField.value = data.name;
                     ingredientsField.value = data.ingredients;
                     instructionsField.value = data.instructions;
                     categoryField.value = data.category;
+                    //resize the textarea to fit the content
+                    M.textareaAutoResize(ingredientsField);
+                    M.textareaAutoResize(instructionsField);
+
                     // update and display the current image
                     if (data.image) {
                         currentImage.src = data.image;
@@ -92,7 +97,7 @@
                         currentImage.src = '';
                         currentImage.style.display = 'none';
                     }
-
+                    //update form action and show the modal
                     editForm.action = `/edit_recipe/update/${recipeId}/`;
                     overlay.style.display = 'block';
                     modal.style.display = 'block';
