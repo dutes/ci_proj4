@@ -11,12 +11,8 @@
 
 /* hide page title on small screens */
 @media (max-width:620px) {
-    .page-title {
+    .brand-logo.page-title {
         display: none;
     }
 }
 
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: greenyellow;
-}
