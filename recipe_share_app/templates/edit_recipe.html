@@ -14,7 +14,7 @@
 </ul>
 
 <!--semi transparent underlay for edit mode-->
-<div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100px; height: 100px; background-color: rgba(0, 0, 0, 0.5);"></div>
+<div id="overlay"></div>
 
 <!--modal to actually edit recipes-->
 <div id="edit-modal" class="modal">
@@ -58,27 +58,31 @@
     </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    M.AutoInit();
+});
+
     const modal = document.getElementById('edit-modal');
-    const editForm = document.getElementById('edit-form');
+    const overlay = document.getElementById('overlay');
     const nameField = document.getElementById('name');
     const ingredientsField = document.getElementById('ingredients');
     const instructionsField = document.getElementById('instructions');
     const categoryField = document.getElementById('category');
     const cancelEdit = document.getElementById('cancel-edit');
     const currentImage = document.getElementById('current-image');
-    const overlay = document.getElementById('overlay');
-
+    const editForm = document.getElementById('edit-form');
 
     document.querySelectorAll('.edit-button').forEach(button => {
         button.addEventListener('click', () => {
-            const recipeId = button.getAttribute('data-recipe-id');
-
+            const recipeId = button.getAttribute('data-recipe-id')
+   
             fetch(`/edit_recipe/details/${recipeId}/`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('http error: ' + response.status);
                     }
-                    response.json()
+                    return response.json();
+                })
                 .then(data => {
                     // populate the form with the recipe details
                     nameField.value = data.name;
@@ -135,6 +139,7 @@
 
     cancelEdit.addEventListener('click', () => {
         modal.style.display = 'none';
+        overlay.style.display = 'none';
     });
 </script>
 {% endblock %}
