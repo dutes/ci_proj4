@@ -64,7 +64,9 @@
             var selects = document.querySelectorAll('select');
             M.FormSelect.init(selects);
             var textareas = document.querySelectorAll('.materialize-textarea');
+            if (textareas.length > 0) {
             M.textareaAutoResize(textareas);
+            }
             var collapsibles = document.querySelectorAll('.collapsible');
             M.Collapsible.init(collapsibles);
         });
