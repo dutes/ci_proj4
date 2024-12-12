@@ -58,6 +58,22 @@
     </div>
 
 <script>
+    //function to resize text area to fit content without type error
+    function resizeTextArea() {
+        M.updateTextFields();
+
+        const ingredients = document.getElementById('ingredients');
+        const instructions = document.getElementById('instructions');
+
+        ingredients.style.height = 'auto';
+        ingredients.style.height = ingredients.scrollHeight + 'px';
+
+        instructions.style.height = 'auto';
+        instructions.style.height = instructions.scrollHeight + 'px';
+    }
+
+
+
     document.addEventListener('DOMContentLoaded', function () {
     M.AutoInit();
 });
@@ -89,10 +105,10 @@
                     ingredientsField.value = data.ingredients;
                     instructionsField.value = data.instructions;
                     categoryField.value = data.category;
-                    //resize the textarea to fit the content
-                    M.updateTextFields();
-                    M.textareaAutoResize(document.getElementById('ingredients'));
-                    M.textareaAutoResize(document.getElementById('instructions'));
+                    // //resize the textarea to fit the content
+                    // M.updateTextFields();
+                    // M.textareaAutoResize(document.getElementById('ingredients'));
+                    // M.textareaAutoResize(document.getElementById('instructions'));
 
                     // update and display the current image
                     if (data.image) {
@@ -102,6 +118,9 @@
                         currentImage.src = '';
                         currentImage.style.display = 'none';
                     }
+                    //attempt to fix TC type error and text area size
+                    resizeTextArea();
+
                     //update form action and show the modal
                     editForm.action = `/edit_recipe/update/${recipeId}/`;
                     overlay.style.display = 'block';
