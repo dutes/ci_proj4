@@ -38,12 +38,10 @@
                 <input type="text" name="name" id="name" placeholder="Recipe Name">
             </div>
             <div class="input-field">
-                <textarea name="ingredients" id="ingredients" class="materialize-textarea"
-                    placeholder="Ingredients"></textarea>
+                <textarea name="ingredients" id="ingredients" placeholder="Ingredients"></textarea>
             </div>
             <div class="input-field">
-                <textarea name="instructions" id="instructions" class="materialize-textarea"
-                    placeholder="Instructions"></textarea>
+                <textarea name="instructions" id="instructions" placeholder="Instructions"></textarea>
             </div>
             <div class="input-field">
                 <select name="category" id="category">
@@ -58,33 +56,28 @@
     </div>
 
 <script>
-    //function to resize text area to fit content without type error
+    //function to resize text area to fit content manually wihoout using materialize
     function resizeTextArea() {
-        M.updateTextFields();
-
         const ingredients = document.getElementById('ingredients');
         const instructions = document.getElementById('instructions');
 
-        console.log('ingredients Value', ingredients.value);
-        console.log('instructions Value', instructions.value);
+        console.log('ingredients Value', ingredients.value); // to be removed before submission
+        console.log('instructions Value', instructions.value); // to be removed before submission
 
         ingredients.style.height = 'auto';
-        const_ =ingredients.offsetHeight;
         ingredients.style.height = ingredients.scrollHeight + 'px';
 
         instructions.style.height = 'auto';
-        const__ = instructions.offsetHeight;
         instructions.style.height = instructions.scrollHeight + 'px';
 
         console.log('ingredients scrollHeight3', ingredients.scrollHeight); //to be remved before submission
         console.log('instructions scrollHeight3', instructions.scrollHeight); //to be remved before submission
     }
-
-
-
-    document.addEventListener('DOMContentLoaded', function () {
-    M.AutoInit();
-});
+function delayResize() {
+    requestAnimationFrame(() => {
+        resizeTextArea();
+    });
+}
 
     const modal = document.getElementById('edit-modal');
     const overlay = document.getElementById('overlay');
@@ -129,11 +122,6 @@
 
                     console.log('ingredients scrollHeight2', ingredientsField.scrollHeight); //to be remved before submission
                     console.log('instructions scrollHeight2', instructionsField.scrollHeight); //to be remved before submission
-                    //attempt to fix TC type error and text area size
-                    //trying with a delay in order to let the DOM update
-                    setTimeout(() => {
-                        resizeTextArea();
-                    }, 150);
 
                     //update form action and show the modal
                     editForm.action = `/edit_recipe/update/${recipeId}/`;
