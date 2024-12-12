@@ -59,6 +59,12 @@
         document.addEventListener('DOMContentLoaded', function() {
             var modals = document.querySelectorAll('.modal');
             M.AutoInit();
+            //adding passive evet listener to prevent warning in console
+            const eventTypes = ['touchstart', 'touchmove', 'touchend', 'touchcancel', 'wheel'];
+            eventTypes.forEach(eventType => {
+                window.addEventListener(eventType, function() {}, {passive: true});
+            });
+
             const sidenavElems= document.querySelectorAll('.sidenav');
             M.Sidenav.init(sidenavElems);
             var selects = document.querySelectorAll('select');
