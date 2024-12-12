@@ -70,6 +70,9 @@
 
         instructions.style.height = 'auto';
         instructions.style.height = instructions.scrollHeight + 'px';
+
+        console.log('ingredients scrollHeight', ingredients.scrollHeight);
+        console.log('instructions scrollHeight', instructions.scrollHeight);
     }
 
 
@@ -109,6 +112,9 @@
                     // M.updateTextFields();
                     // M.textareaAutoResize(document.getElementById('ingredients'));
                     // M.textareaAutoResize(document.getElementById('instructions'));
+
+                    console.log('ingredients scrollHeight', ingredientsField.scrollHeight);
+                    console.log('instructions scrollHeight', instructionsField.scrollHeight);
 
                     // update and display the current image
                     if (data.image) {
