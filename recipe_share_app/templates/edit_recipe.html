@@ -57,111 +57,115 @@
 
 <script>
     //function to resize text area to fit content manually wihoout using materialize
-    function resizeTextArea() {
-        const ingredients = document.getElementById('ingredients');
-        const instructions = document.getElementById('instructions');
+function resizeTextArea() {
+    const ingredients = document.getElementById('ingredients');
+    const instructions = document.getElementById('instructions');
 
-        console.log('ingredients Value', ingredients.value); // to be removed before submission
-        console.log('instructions Value', instructions.value); // to be removed before submission
+    //reset height to auto to get the actual scrollHeight
+    ingredients.style.height = 'auto';
+    instructions.style.height = 'auto';
 
-        ingredients.style.height = 'auto';
-        ingredients.style.height = ingredients.scrollHeight + 'px';
+    const ingredientsHeight = ingredients.scrollHeight;
+    const instructionsHeight = instructions.scrollHeight;
 
-        instructions.style.height = 'auto';
-        instructions.style.height = instructions.scrollHeight + 'px';
+    //set the height based off the content.
+    ingredients.style.height = ingredients.scrollHeight + 'px';
+    instructions.style.height = instructions.scrollHeight + 'px';
 
-        console.log('ingredients scrollHeight3', ingredients.scrollHeight); //to be remved before submission
-        console.log('instructions scrollHeight3', instructions.scrollHeight); //to be remved before submission
-    }
+
+}
+//delay resize till DOM is updated
 function delayResize() {
     requestAnimationFrame(() => {
         resizeTextArea();
     });
 }
+//dom elements
+const modal = document.getElementById('edit-modal');
+const overlay = document.getElementById('overlay');
+const nameField = document.getElementById('name');
+const ingredientsField = document.getElementById('ingredients');
+const instructionsField = document.getElementById('instructions');
+const categoryField = document.getElementById('category');
+const cancelEdit = document.getElementById('cancel-edit');
+const currentImage = document.getElementById('current-image');
+const editForm = document.getElementById('edit-form');
 
-    const modal = document.getElementById('edit-modal');
-    const overlay = document.getElementById('overlay');
-    const nameField = document.getElementById('name');
-    const ingredientsField = document.getElementById('ingredients');
-    const instructionsField = document.getElementById('instructions');
-    const categoryField = document.getElementById('category');
-    const cancelEdit = document.getElementById('cancel-edit');
-    const currentImage = document.getElementById('current-image');
-    const editForm = document.getElementById('edit-form');
-
-    document.querySelectorAll('.edit-button').forEach(button => {
-        button.addEventListener('click', () => {
-            const recipeId = button.getAttribute('data-recipe-id')
+document.querySelectorAll('.edit-button').forEach(button => {
+    button.addEventListener('click', () => {
+        const recipeId = button.getAttribute('data-recipe-id')
    
-            fetch(`/edit_recipe/details/${recipeId}/`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('http error: ' + response.status);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // populate the form with the recipe details
-                    nameField.value = data.name;
-                    ingredientsField.value = data.ingredients;
-                    instructionsField.value = data.instructions;
-                    categoryField.value = data.category;
+        fetch(`/edit_recipe/details/${recipeId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('http error: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // populate the form with the recipe details
+                nameField.value = data.name;
+                ingredientsField.value = data.ingredients;
+                instructionsField.value = data.instructions;
+                categoryField.value = data.category;
 
 
-                    console.log('ingredients scrollHeight1', ingredientsField.scrollHeight); //to be remved before submission
-                    console.log('instructions scrollHeight1', instructionsField.scrollHeight); //to be remved before submission
+                console.log('ingredients scrollHeight1', ingredientsField.scrollHeight); //to be remved before submission
+                console.log('instructions scrollHeight1', instructionsField.scrollHeight); //to be remved before submission
 
-                    // update and display the current image
-                    if (data.image) {
-                        currentImage.src = data.image;
-                        currentImage.style.display = 'block';
-                    } else {
-                        currentImage.src = '';
-                        currentImage.style.display = 'none';
-                    }
+                // update and display the current image
+                if (data.image) {
+                    currentImage.src = data.image;
+                    currentImage.style.display = 'block';
+                } else {
+                    currentImage.src = '';
+                    currentImage.style.display = 'none';
+                }
 
                     console.log('ingredients scrollHeight2', ingredientsField.scrollHeight); //to be remved before submission
                     console.log('instructions scrollHeight2', instructionsField.scrollHeight); //to be remved before submission
+                //call the delay resize function
+                delayResize();
 
                     //update form action and show the modal
-                    editForm.action = `/edit_recipe/update/${recipeId}/`;
-                    overlay.style.display = 'block';
-                    modal.style.display = 'block';
-                })
-                .catch(error => {
-                    alert('An error occured getting recipe details');
-                });
-            
-        });
+                editForm.action = `/edit_recipe/update/${recipeId}/`;
+                overlay.style.display = 'block';
+                modal.style.display = 'block';
+            })
+            .catch(error => {
+                alert('An error occured getting recipe details');
+            });
     });
+});
 
-    editForm.addEventListener('submit', (event) => {
-        event.preventDefault();
+editForm.addEventListener('submit', (event) => {
+    event.preventDefault();
     
-        const formData = new FormData(editForm);
+    const formData = new FormData(editForm);
 
-        fetch(editForm.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Recipe updated successfully');
-                window.location.reload();
-            } else {
-                alert('Error: ' + JSON.stringify(data.errors));
-            }
-        })
+    fetch(editForm.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Recipe updated successfully');
+            window.location.reload();
+        } else {
+            alert('Error: ' + JSON.stringify(data.errors));
+        }
+    })
         .catch(error => alert('There was an error with the fectch request: ' + error.message));
-    });
+});
 
-    cancelEdit.addEventListener('click', () => {
-        modal.style.display = 'none';
-        overlay.style.display = 'none';
-    });
+
+cancelEdit.addEventListener('click', () => {
+    modal.style.display = 'none';
+    overlay.style.display = 'none';
+});
 </script>
 {% endblock %}
