@@ -65,6 +65,9 @@
         const ingredients = document.getElementById('ingredients');
         const instructions = document.getElementById('instructions');
 
+        console.log('ingredients Value', ingredients.value);
+        console.log('instructions Value', instructions.value);
+
         ingredients.style.height = 'auto';
         ingredients.style.height = ingredients.scrollHeight + 'px';
 
@@ -125,7 +128,10 @@
                         currentImage.style.display = 'none';
                     }
                     //attempt to fix TC type error and text area size
-                    resizeTextArea();
+                    //trying with a delay in order to let the DOM update
+                    setTimeout(() => {
+                        resizeTextArea();
+                    }, 50);
 
                     //update form action and show the modal
                     editForm.action = `/edit_recipe/update/${recipeId}/`;
