@@ -74,8 +74,8 @@
         instructions.style.height = 'auto';
         instructions.style.height = instructions.scrollHeight + 'px';
 
-        console.log('ingredients scrollHeight', ingredients.scrollHeight);
-        console.log('instructions scrollHeight', instructions.scrollHeight);
+        console.log('ingredients scrollHeight3', ingredients.scrollHeight); //to be remved before submission
+        console.log('instructions scrollHeight3', instructions.scrollHeight); //to be remved before submission
     }
 
 
@@ -111,13 +111,10 @@
                     ingredientsField.value = data.ingredients;
                     instructionsField.value = data.instructions;
                     categoryField.value = data.category;
-                    // //resize the textarea to fit the content
-                    // M.updateTextFields();
-                    // M.textareaAutoResize(document.getElementById('ingredients'));
-                    // M.textareaAutoResize(document.getElementById('instructions'));
 
-                    console.log('ingredients scrollHeight', ingredientsField.scrollHeight);
-                    console.log('instructions scrollHeight', instructionsField.scrollHeight);
+
+                    console.log('ingredients scrollHeight1', ingredientsField.scrollHeight); //to be remved before submission
+                    console.log('instructions scrollHeight1', instructionsField.scrollHeight); //to be remved before submission
 
                     // update and display the current image
                     if (data.image) {
@@ -127,6 +124,9 @@
                         currentImage.src = '';
                         currentImage.style.display = 'none';
                     }
+
+                    console.log('ingredients scrollHeight2', ingredientsField.scrollHeight); //to be remved before submission
+                    console.log('instructions scrollHeight2', instructionsField.scrollHeight); //to be remved before submission
                     //attempt to fix TC type error and text area size
                     //trying with a delay in order to let the DOM update
                     setTimeout(() => {
