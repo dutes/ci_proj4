@@ -90,6 +90,7 @@
                     instructionsField.value = data.instructions;
                     categoryField.value = data.category;
                     //resize the textarea to fit the content
+                    M.updateTextFields();
                     M.textareaAutoResize(document.getElementById('ingredients'));
                     M.textareaAutoResize(document.getElementById('instructions'));
 
