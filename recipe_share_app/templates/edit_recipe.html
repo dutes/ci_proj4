@@ -90,8 +90,8 @@
                     instructionsField.value = data.instructions;
                     categoryField.value = data.category;
                     //resize the textarea to fit the content
-                    M.textareaAutoResize(ingredientsField);
-                    M.textareaAutoResize(instructionsField);
+                    M.textareaAutoResize(document.getElementById('ingredients'));
+                    M.textareaAutoResize(document.getElementById('instructions'));
 
                     // update and display the current image
                     if (data.image) {
