@@ -22,7 +22,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">>
+                    <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'starters' %}">Starters</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'mains' %}">Mains</a></li>
@@ -39,8 +39,10 @@
             {% block content %}
             {% endblock %}
     </main>
-    <footer class="class="bg-primary text-white text-center py-3">
-            <p>&copy; 2024 Recipe Sharing Platform</p>
+    <footer class="bg-primary text-white text-center py-3">
+        <div class="container">
+            <p>&copy; 2024 Recipe Sharing Platform a Brian Doutey project</p>
+        </div> 
     </footer>
 </body>
 </html>
