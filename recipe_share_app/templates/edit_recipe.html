@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Edit Recipes</h1>
+<div class="container">
+    <h1>Edit Recipes</h1>
 
-<ul class="collection">
+
+<ul class="list-group">
     {% for recipe in recipes %}
-    <li class="collection-item avatar">
-        <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}">
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="rounded me-3" style="width: 50px; height: 50px;">
         <span class="title">{{ recipe.name }}</span>
-        <button class="btn waves-effect waves-light edit-button" data-recipe-id="{{ recipe.id }}">Edit</button>
+        <button class="btn btn-primary edit-button" data-recipe-id="{{ recipe.id }}" data-bs-toggle="modal" data-bs-target="#edit-modal">Edit</button>
     </li>
     {% endfor %}
 </ul>
@@ -16,156 +18,125 @@
 <!--semi transparent underlay for edit mode-->
 <div id="overlay"></div>
 
-<!--modal to actually edit recipes-->
-<div id="edit-modal" class="modal">
-    <div class="modal-content">
-        <h4>Edit Recipe</h4>
-        <form id="edit-form" method="POST">
-            {% csrf_token %}
-            <div class="input-field">
-                <img id="current-image" src="" alt="current recipe image" style="max-width: 100%; display:none;">
+<div class="modal fade" id="edit-modal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Recipe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="file-field input-field">
-                <div class="btn">
-                    <span>Upload Image</span>
-                    <input type="file" name="image" id="image">
-                </div>
-                <div class="file-path-wrapper">
-                    <input class="file-path validate" type="text" placeholder="Upload a new image">
-                </div>
+            <div class="modal-body">
+                <form id="edit-form" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <img id="current-image" src="" alt="current recipe image" class="img-fluid mb-3 d-none">
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Upload Image</label>
+                        <input type="file" name="image" id="image" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Recipe Name</label>
+                        <input type="text" name="name" id="name" class="form-control" placeholder="Recipe Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ingredients" class="form-label">Ingredients</label>
+                        <textarea name="ingredients" id="ingredients" class="form-control" rows="4" placeholder="Ingredients" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="instructions" class="form-label">Instructions</label>
+                        <textarea name="instructions" id="instructions" class="form-control" rows="4" placeholder="Instructions" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select name="category" id="category" class="form-select" required>
+                            <option value="Starters">Starter</option>
+                            <option value="Mains">Main</option>
+                            <option value="Desserts">Dessert</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel-edit">Cancel</button>
+                    </div>
+                </form>
             </div>
-            <div class="input-field">
-                <input type="text" name="name" id="name" placeholder="Recipe Name">
-            </div>
-            <div class="input-field">
-                <textarea name="ingredients" id="ingredients" placeholder="Ingredients"></textarea>
-            </div>
-            <div class="input-field">
-                <textarea name="instructions" id="instructions" placeholder="Instructions"></textarea>
-            </div>
-            <div class="input-field">
-                <select name="category" id="category">
-                    <option value="Starters">Starter</option>
-                    <option value="Mains">Main</option>
-                    <option value="Desserts">Dessert</option>
-                </select>
-            </div>
-            <button type="submit" class="btn waves-effect waves-light">Save</button>
-            <button type="button" id="cancel-edit" class="btn red lighten-1">Cancel</button>
-        </form>
+        </div>
     </div>
+</div>
+</div>
 
 <script>
-    //function to resize text area to fit content manually wihoout using materialize
-function resizeTextArea() {
-    const ingredients = document.getElementById('ingredients');
-    const instructions = document.getElementById('instructions');
+document.addEventListener('DOMContentLoaded', function () {
+    // Elements
+    const editButtons = document.querySelectorAll('.edit-button');
+    const editForm = document.getElementById('edit-form');
+    const currentImage = document.getElementById('current-image');
+    const nameField = document.getElementById('name');
+    const ingredientsField = document.getElementById('ingredients');
+    const instructionsField = document.getElementById('instructions');
+    const categoryField = document.getElementById('category');
 
-    //reset height to auto to get the actual scrollHeight
-    ingredients.style.height = 'auto';
-    instructions.style.height = 'auto';
+    let selectedRecipeId = null;
 
-    const ingredientsHeight = ingredients.scrollHeight;
-    const instructionsHeight = instructions.scrollHeight;
+    // Attach click event listeners to edit buttons
+    editButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            selectedRecipeId = button.getAttribute('data-recipe-id');
 
-    //set the height based off the content.
-    ingredients.style.height = ingredients.scrollHeight + 'px';
-    instructions.style.height = instructions.scrollHeight + 'px';
+            // Fetch recipe details and populate form fields
+            fetch(`/edit_recipe/details/${selectedRecipeId}/`)
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    nameField.value = data.name;
+                    ingredientsField.value = data.ingredients;
+                    instructionsField.value = data.instructions;
+                    categoryField.value = data.category;
 
+                    if (data.image) {
+                        currentImage.src = data.image;
+                        currentImage.classList.remove('d-none');
+                    } else {
+                        currentImage.src = '';
+                        currentImage.classList.add('d-none');
+                    }
 
-}
-//delay resize till DOM is updated
-function delayResize() {
-    requestAnimationFrame(() => {
-        resizeTextArea();
+                    editForm.action = `/edit_recipe/update/${selectedRecipeId}/`;
+                })
+                .catch(error => {
+                    alert('An error occurred while fetching recipe details.');
+                });
+        });
     });
-}
-//dom elements
-const modal = document.getElementById('edit-modal');
-const overlay = document.getElementById('overlay');
-const nameField = document.getElementById('name');
-const ingredientsField = document.getElementById('ingredients');
-const instructionsField = document.getElementById('instructions');
-const categoryField = document.getElementById('category');
-const cancelEdit = document.getElementById('cancel-edit');
-const currentImage = document.getElementById('current-image');
-const editForm = document.getElementById('edit-form');
 
-document.querySelectorAll('.edit-button').forEach(button => {
-    button.addEventListener('click', () => {
-        const recipeId = button.getAttribute('data-recipe-id')
-   
-        fetch(`/edit_recipe/details/${recipeId}/`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('http error: ' + response.status);
-                }
-                return response.json();
-            })
+    // Handle form submission
+    editForm.addEventListener('submit', event => {
+        event.preventDefault();
+
+        const formData = new FormData(editForm);
+        fetch(editForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+        })
+            .then(response => response.json())
             .then(data => {
-                // populate the form with the recipe details
-                nameField.value = data.name;
-                ingredientsField.value = data.ingredients;
-                instructionsField.value = data.instructions;
-                categoryField.value = data.category;
-
-
-                console.log('ingredients scrollHeight1', ingredientsField.scrollHeight); //to be remved before submission
-                console.log('instructions scrollHeight1', instructionsField.scrollHeight); //to be remved before submission
-
-                // update and display the current image
-                if (data.image) {
-                    currentImage.src = data.image;
-                    currentImage.style.display = 'block';
+                if (data.success) {
+                    alert('Recipe updated successfully!');
+                    window.location.reload();
                 } else {
-                    currentImage.src = '';
-                    currentImage.style.display = 'none';
+                    alert(`Error: ${JSON.stringify(data.errors)}`);
                 }
-
-                    console.log('ingredients scrollHeight2', ingredientsField.scrollHeight); //to be remved before submission
-                    console.log('instructions scrollHeight2', instructionsField.scrollHeight); //to be remved before submission
-                //call the delay resize function
-                delayResize();
-
-                    //update form action and show the modal
-                editForm.action = `/edit_recipe/update/${recipeId}/`;
-                overlay.style.display = 'block';
-                modal.style.display = 'block';
             })
             .catch(error => {
-                alert('An error occured getting recipe details');
+                alert(`An error occurred: ${error.message}`);
             });
     });
-});
-
-editForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    
-    const formData = new FormData(editForm);
-
-    fetch(editForm.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Recipe updated successfully');
-            window.location.reload();
-        } else {
-            alert('Error: ' + JSON.stringify(data.errors));
-        }
-    })
-        .catch(error => alert('There was an error with the fectch request: ' + error.message));
-});
-
-
-cancelEdit.addEventListener('click', () => {
-    modal.style.display = 'none';
-    overlay.style.display = 'none';
 });
 </script>
 {% endblock %}

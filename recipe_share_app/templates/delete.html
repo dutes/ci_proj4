@@ -1,42 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Delete Recipes</h1>
-<!--list with delete buttons-->
-<ul class="collection">
-    {% for recipe in recipes %}
-    <li class="collection-item avatar">
-        <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}">
-        <span class="title">{{ recipe.name }}</span>
-        <button class="btn red waves-effect waves-light delete-button" data-recipe-id="{{ recipe.id }}">Delete</button>
-    </li>
-    {% endfor %}
-</ul>
+<div class="container">
+    <h1 class="text-center">Delete Recipes</h1>
 
-<!--modal for delete confirmation-->
-<div id="delete-modal" class="modal">
-    <div class="modal-content">
-        <h4>Confirm Delete</h4>
-        <p>Are you sure you want to delete this recipe?</p>
+    <!--list with delete buttons-->
+    <ul class="list-group">
+        {% for recipe in recipes %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="rounded me-3" style="width: 50px; height: 50px;">
+            <span class="me-auto">{{ recipe.name }}</span>
+            <button class="btn btn-danger delete-button" data-recipe-id="{{ recipe.id }}" data-bs-toggle="modal" data-bs-target="#delete-modal">Delete</button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel"> Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you really sure you want to delete this recipe?</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="confirm-delete" class="btn btn-primary">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="modal-footer">
-        <button id="confirm-delete" class="btn waves-effect waves-light">Yes</button>
-        <button id="cancel-delete" class="btn red lighten-1">No</button>
-    </div>
+    <form id="delete-form" method="POST" action="{% url 'delete' %}">
+        {% csrf_token %}
+        <input type="hidden" name="recipe_id" id="recipe-id-to-delete">
+    </form>    
 </div>
-
-<form id="delete-form" method="POST" action="{% url 'delete' %}">
-    {% csrf_token %}
-    <input type="hidden" name="recipe_id" id="recipe-id-to-delete">
-</form>
 
 <script>
     document.addEventListener('DOMContentLoaded', function(){
-        var modalElems = document.querySelectorAll('.modal');
-        M.Modal.init(modalElems);
-
         const deleteButtons = document.querySelectorAll('.delete-button');
-        const deleteModal = M.Modal.init(document.getElementById('delete-modal'));
         const deleteForm = document.getElementById('delete-form');
         const recipeIdInput = document.getElementById('recipe-id-to-delete');
         const confirmDelete = document.getElementById('confirm-delete');
@@ -48,18 +52,15 @@
             button.addEventListener('click',() => {
                 selectedRecipeId = button.getAttribute('data-recipe-id');
                 recipeIdInput.value = selectedRecipeId;
-                deleteModal.open();
             });
         });
 
 
     confirmDelete.addEventListener('click', () => {
         if (selectedRecipeId) {
-            deleteModal.close();
             deleteForm.submit();
             }
         });
     });
-
 </script>
 {% endblock %}

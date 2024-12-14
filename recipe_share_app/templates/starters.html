@@ -3,28 +3,35 @@
 {% block title %}Starters - Recipe Sharing Platform{% endblock %}
 
 {% block content %}
-<h2 class="center-align">Starters</h2>
-<ul class="collapsible">
-    {% for recipe in recipes %}
-        <li>
-            <!-- Setting up recipe card for collapse -->
-            <div class="collapsible-header row" style="margin: 0; display: flex; align-items: center;">
-                <!-- Recipe image -->
-                <div class="col s12 m4">
-                    <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" 
-                         style="width: 100%; height: auto; border-radius: 5px;">
-                </div>
-                <!-- Recipe name and date created -->
-                <div class="col s12 m8">
-                    <h5 style="margin: 0; font-size: 1.5em;">{{ recipe.name }}</h5>
-                    <p style="margin: 0; font-size: 0.9em; color: grey;">Created on {{ recipe.date_created|date:"M d, Y" }}</p>
+<div=class"container">
+    <h2 class = "text-center mb-4">Starters</h2>
+
+    <div class="accordion" id="recipe-accordion">
+        {% for recipe in recipes %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
+                    <div class="d-flex align-items-center w-100">
+                        <!--recipe image-->
+                        <div class="me-3" style="flex-shrink: 0; width: 25%;">
+                            <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="img-fluid rounded">    
+                        </div>
+                        <!--recipe name & date-->
+                        <div>
+                            <h5 class="mb-0">{{ recipe.name }}</h5>
+                            <small class="text-muted">Created on {{ recipe.date_created|date:"M d, Y" }}</small>
+                        </div>
+                    </div>
+                </button>
+            </h2>
+            <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#recipe-accordion">
+                <div class="accordion-body">
+                    <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
+                    <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
                 </div>
             </div>
-            <div class="collapsible-body">
-                <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
-                <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
-            </div>
-        </li>
-    {% endfor %}
-</ul>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

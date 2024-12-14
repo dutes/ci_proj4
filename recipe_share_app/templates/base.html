@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     {% load static %}
-    <!-- Materialize CSS stylesheet-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <!-- Materialize JavaScript-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!--bootstrap CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--bootstrap JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <!--CSS link-->
     <link rel="stylesheet" href="{% static 'recipe_share_app/styles.css' %}">
     <meta charset="UTF-8">
@@ -14,68 +14,33 @@
 </head>
 <body>
     <header>
-        <nav>
-            <div class="nav-wrapper blue">
-                <a href="{% url 'index' %}" class="brand-logo page-title">Recipe Sharing Platform</a>
-                <!--mobile nav-->
-                <a href="#" data-target="mobile-menu" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-                <!--desktop nav-->
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="{% url 'index' %}">Home</a></li>
-                    <li><a href="{% url 'starters' %}">Starters</a></li>
-                    <li><a href="{% url 'mains' %}">Mains</a></li>
-                    <li><a href="{% url 'desserts' %}">Desserts</a></li>
-                    <li><a href="{% url 'add_recipe' %}">Add Recipe</a></li>
-                    <li><a href="{% url 'delete' %}">Delete Recipes</a></li>
-                    <li><a href="{% url 'edit_recipe' %}">Edit a recipe</a></li>
+        <nav class="navbar navbar-extended-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'index' %}">Recipe Sharing Platform</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'starters' %}">Starters</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'mains' %}">Mains</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'desserts' %}">Desserts</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'add_recipe' %}">Add Recipe</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'delete' %}">Delete Recipes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'edit_recipe' %}">Edit a recipe</a></li>
                 </ul>
             </div>
-       </nav>
-       <ul class="sidenav" id="mobile-menu">
-            <li><a href="{% url 'index' %}">Home</a></li>
-            <li><a href="{% url 'starters' %}">Starters</a></li>
-            <li><a href="{% url 'mains' %}">Mains</a></li>
-            <li><a href="{% url 'desserts' %}">Desserts</a></li>
-            <li><a href="{% url 'add_recipe' %}">Add Recipe</a></li>
-            <li><a href="{% url 'delete' %}">Delete Recipes</a></li>
-            <li><a href="{% url 'edit_recipe' %}">Edit a recipe</a></li>
-        </ul>
+        </div>
+        </nav>
     </header>
-    <main class="container">
-        <div class="card-pannel center-align">
+    <main class="container my-4">
             {% block content %}
             {% endblock %}
-        </div>
     </main>
-    <footer class="page-footer blue">
-        <div class="container center-align">
+    <footer class="class="bg-primary text-white text-center py-3">
             <p>&copy; 2024 Recipe Sharing Platform</p>
-        </div>
     </footer>
-
-    
-    <!--Initialize materialize-->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var modals = document.querySelectorAll('.modal');
-            M.AutoInit();
-            //adding passive evet listener to prevent warning in console
-            const eventTypes = ['touchstart', 'touchmove', 'touchend', 'touchcancel', 'wheel'];
-            eventTypes.forEach(eventType => {
-                window.addEventListener(eventType, function() {}, {passive: true});
-            });
-
-            const sidenavElems= document.querySelectorAll('.sidenav');
-            M.Sidenav.init(sidenavElems);
-            var selects = document.querySelectorAll('select');
-            M.FormSelect.init(selects);
-            var textareas = document.querySelectorAll('.materialize-textarea');
-            if (textareas.length > 0) {
-            M.textareaAutoResize(textareas);
-            }
-            var collapsibles = document.querySelectorAll('.collapsible');
-            M.Collapsible.init(collapsibles);
-        });
-    </script>
 </body>
 </html>
