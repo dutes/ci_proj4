@@ -1,0 +1,18 @@
+/* responsiveness for mobile devices and the recipe cards */
+@media (max-width:600px) {
+    .img.img-fluid {
+        width: 100%;
+        height: auto;
+    }
+    .card.card-body {
+        text-align: center;
+    }
+}
+
+/* hide page title on small screens */
+@media (max-width:620px) {
+    .navbar-brand {
+        display: none;
+    }
+}
+

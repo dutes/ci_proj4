@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'recipe_sharing_platform.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', f'recipe_sharing_platform.settings.{os.getenv("DJANGO_ENV", "production")}')
 
 application = get_wsgi_application()
