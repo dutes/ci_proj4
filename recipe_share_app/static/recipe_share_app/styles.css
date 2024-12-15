@@ -18,6 +18,8 @@
 
 .alert-success {
     background-color: #11a311; /* Custom green */
-    color: #d5dad6;          /* Custom text color */
+    color: #ffffff;          /* Custom text color */
     border-color: #171b18;   /* Custom border color */
+    font-weight: bold;
+    text-align: center;
 }

@@ -45,7 +45,7 @@ def delete(request):
         if recipe_ids:
             Recipe.objects.filter(id__in=recipe_ids).delete()
             messages.success(request, 'Selected recipe was deleted')
-        return redirect('index')
+        return redirect('delete')
     
     recipes = Recipe.objects.all()
     return render(request, 'delete.html', {'recipes': recipes})
