@@ -1,6 +1,9 @@
 from .base import *
 import dj_database_url
 import django_heroku
+import base64
+import os
+from google.oauth2 import service_account
 
 #prod spec settings
 DEBUG=False
