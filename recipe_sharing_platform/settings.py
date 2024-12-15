@@ -25,6 +25,7 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1').split(',')
 
 # Application definition
 INSTALLED_APPS = [
+    'django.contrib.auth',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -87,6 +88,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# login logout urls
+LOGIN_URL = 'login' # redirects to the modal login view
+LOGIN_REDIRECT_URL = 'index' #redirects index view post login
+LOGOUT_REDIRECT_URL = 'index' #redirect after logout
+
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -123,3 +129,9 @@ DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 # Django Heroku settings
 import django_heroku
 django_heroku.settings(locals())
+
+#session settings
+SESSION_ENGINE='django.contrib.sessions.backends.db'
+SESSION_COOKIE_HTTPPONLY = True
+SESSION_COOKIE_SECURE=False
+CSRF_COOKIE_SCENE=False

@@ -1,19 +1,155 @@
 {% extends 'base.html' %}
 
-{% block title %}Welcome - Recipe Sharing Platform{% endblock %}
-
 {% block content %}
-<div class="container">
-<h1 class="text-center">Welcome to the Recipe Sharing Platform</h1>
-<p class="text-center">Discover and share your favorite recipes!</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc aliquet turpis sit amet leo consectetur auctor. Nulla in consectetur lectus. Donec non blandit lorem. Aliquam dictum condimentum enim a finibus. Pellentesque consectetur arcu sed malesuada vestibulum. Maecenas scelerisque imperdiet feugiat. Suspendisse efficitur nibh nibh, vel egestas eros semper et. Integer felis lectus, imperdiet non justo volutpat, pharetra bibendum metus. In dignissim fringilla libero, quis dictum massa dignissim at. Fusce egestas tincidunt metus, non pulvinar lectus euismod in. In bibendum ligula eget lorem posuere, a porttitor orci consequat. Quisque tempus ante ut feugiat pretium. Praesent pellentesque nec ligula et placerat. Nunc eros felis, molestie a ligula sit amet, luctus ultrices purus. Maecenas est justo, aliquet non convallis in, tempor quis massa.
+<div class="container text-center">
+    <h1>Welcome to the Recipe Sharing App!</h1>
+    {% if user.is_authenticated %}
+        <h2> Welcome, {{ user.username }}! Please contribute by adding a recipe.</h2>
+    {% else %}
+        <p>If you don't have an account, please create one to be able to add, view or delete recipes. Otherwise, login to contribute</p>
 
-    Integer mollis mi sit amet diam luctus, at pulvinar metus dignissim. Cras rhoncus dui ut congue malesuada. Cras cursus, massa vel vulputate rutrum, orci sapien volutpat lectus, quis accumsan erat enim quis risus. Mauris sed tristique arcu. Nullam mattis accumsan est id ultricies. Donec rutrum, nisl nec tristique accumsan, metus elit mollis enim, eu tristique purus turpis et elit. Nam non sagittis justo, vitae lobortis odio.
-    
-    Ut a suscipit est, quis varius nisi. Donec quis neque sed arcu tristique posuere congue sed urna. Sed dapibus pharetra leo interdum volutpat. Suspendisse potenti. Aliquam erat volutpat. Nullam varius dictum eros ac convallis. Nulla sollicitudin id libero a fringilla.
-    
-    Phasellus sed dui id mi pellentesque ornare ac et libero. Sed malesuada, mauris ac sodales sodales, nibh lorem lacinia enim, ut bibendum odio sem hendrerit est. Etiam interdum ac augue vitae pulvinar. Etiam id bibendum tortor, ut suscipit erat. Nunc vel sapien eu augue scelerisque sagittis. Sed pretium, nunc vel viverra maximus, odio eros laoreet massa, quis pharetra ipsum lacus at turpis. Fusce suscipit condimentum sem, nec accumsan orci iaculis a. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Aliquam aliquam, nibh non malesuada viverra, ligula diam vulputate ligula, sed iaculis tortor lorem bibendum nibh. Etiam rutrum at elit ac sollicitudin. Nunc sodales vitae diam nec dapibus. Proin eu cursus quam, cursus accumsan sapien.
-    
-    Duis sit amet diam arcu. Cras porttitor consequat malesuada. Aliquam velit tortor, mattis sit amet nisi sit amet, gravida venenatis velit. Quisque tempor, orci in scelerisque faucibus, nisi metus varius ex, non mollis nunc urna et eros. In orci justo, cursus a pellentesque ut, congue in tortor. Pellentesque laoreet, lorem ac facilisis condimentum, metus ex dapibus quam, vitae euismod justo ipsum eget neque. Quisque luctus, metus ac ultrices posuere, risus lacus cursus arcu, a malesuada metus ex at ex. Morbi dictum, ligula in ultricies malesuada, sapien metus mollis nisi, at eleifend urna lacus non dolor. Etiam vel nisl vel eros ultrices egestas.</p>
+<!-- toast messages -->
+{% if messages %}
+<div aria-live="polite" aria-tomic="true" class="position-relative">
+    <div class="toast-container position-absolute top-0 start-0 p-3">
+        {% for message in messages %}
+        <div class="toast align-items-center text-white bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {{ message }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>  
+{% endif %}
+
+<!-- buttons to open login and create views-->
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+         <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</button>
+    {% endif %}
 </div>
+
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered"> <!-- Centered modal -->
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header bg-primary text-white"> <!-- Added background color -->
+                <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <form method="post" action="{% url 'index' %}" class="p-3">
+                    {% csrf_token %}
+                    
+                    <!-- Username Field -->
+                    <div class="mb-3">
+                        <label for="id_login-username" class="form-label fw-semibold">Username</label>
+                        <input type="text" name="login-username" class="form-control" id="id_login-username" 
+                               placeholder="Enter your username" required>
+                    </div>
+                    
+                    <!-- Password Field -->
+                    <div class="mb-3">
+                        <label for="id_login-password" class="form-label fw-semibold">Password</label>
+                        <input type="password" name="login-password" class="form-control" id="id_login-password" 
+                               placeholder="Enter your password" required>
+                    </div>
+                    
+                    <!-- Submit and Cancel Buttons -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" name="login" class="btn btn-primary w-100">Login</button>
+                        <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer text-center">
+                <p class="small text-muted w-100">
+                    Don't have an account? <a href="#" class="text-primary" data-bs-toggle="modal" data-bs-target="#signupModal">Sign up here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Sign-up Modal -->
+<div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signupModalLabel">Sign Up</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'index' %}" id="signup-form">
+                    {% csrf_token %}
+                    <!--username-->
+                    <div class="mb-3">
+                        <label for="id_signup-username" class="form-label">Username</label>
+                        <input type="text" name="signup-username" class="form-control" id="id_signup_username"
+                            placeholder="Choose a username" required>
+                    </div>
+                    <!--password-->
+                    <!--{{ signup_form.as_p }}  Ensures prefixed form fields are rendered correctly -->
+                     <div class="mb-3">
+                        <label for="id_signup-password1"class="form-label"> Password</label>
+                        <input type=""password name="signup-password1" class="form-control" id="id_signuup-password1"
+                            placeholder="Enter a strong password" required>
+                     </div>
+                     <!--password confirmation-->
+                     <div class="mb-3">
+                        <label for="id_signup-password2"class="form-label"> Password</label>
+                        <input type=""password name="signup-password2" class="form-control" id="id_signuup-password2"
+                            placeholder="Re-enter your password" required>
+                        <div id="password-feedback" class="form-text text-danger"></div>
+                     </div>
+                    <div class="text-end">
+                        <button type="submit" name="signup" class="btn btn-primary">Sign Up</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //password validation feedback
+    document.addEventListener("DOMContentLoaded", function (){
+        const passwordField=document.getElementById("id_signup-password1");
+        const passwordConfirmationField = document.getElementById("id_signup-password2");
+        const feedback = document.getElementById("password-validation-feedback");
+
+        if (passwordField && passwordConfirmationField) {
+            passwordField.addEventListener("input", validatePasswords);
+            passwordConfirmationField.addEventListener("input", validatePasswords);
+
+            function validatePasswords() {
+                const password = passwordField.value;
+                const confirmPassword=passwordConfirmationField.value;
+            
+                if (password.length < 8) {
+                    feedback.textContent = "Password must be at least 8 characters long";
+                } else if (password !== confirmPassword) {
+                    feedback.textContent = "Passwords must match";
+                } else {
+                    feedback.textContent = "";
+                }
+            }
+        }
+        //toast dismissal
+        const toastElements = document.querySelectorAll('.toast');
+        toastElements.forEach(toastEl => {
+            const toast = new bootstrap.Toast(toastEl, { delay: 5000}); //delay dismiss for 5sec
+            toast.show();
+        })   
+    });
+</script>
 {% endblock %}

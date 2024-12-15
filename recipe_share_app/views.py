@@ -1,13 +1,62 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib import messages
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from .models import Recipe
 from .forms import RecipeForm
+
+def custom_login_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(request, "You need to login to access that page")
+            return redirect('index')
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
 
 # Create your views here.
 # home page
 def index(request):
-    return render(request, 'index.html')
+    # Instantiate forms with prefixes to avoid ID conflicts in the DOM
+    login_form = AuthenticationForm(prefix='login')  
+    signup_form = UserCreationForm(prefix='signup')  
+
+    if request.method == "POST":
+        # Handle Login Form
+        if "login" in request.POST:
+            login_form = AuthenticationForm(data=request.POST, prefix='login')  
+            if login_form.is_valid():
+                user = login_form.get_user()
+                login(request, user)
+                messages.success(request, "You have logged in successfully!")
+                return redirect('index')
+            else:
+                messages.error(request, "Login failed, please check your username and password.")
+        
+        # Handle Signup Form
+        elif "signup" in request.POST:
+            # Explicitly handle prefixed POST data
+            signup_form = UserCreationForm(request.POST, prefix='signup')
+            if signup_form.is_valid():
+                user = signup_form.save()
+                login(request, user)  # Log in the user
+                return redirect('index')
+            else:
+                #dupe username check
+                if 'username' in signup_form.errors:
+                    messages.error(request, "this username already exsists, please chose another.")
+                else:
+                    messages.error(request, "Sign-up failed. Please correct the errors and try again.")
+
+    return render(request, 'index.html', {'login_form': login_form, 'signup_form': signup_form})
+
+# logout view
+def logout_view(request):
+    logout(request)
+    messages.success(request, "you have successfully logged out")
+    return redirect('index')
 
 # starters page
 def starters(request):
@@ -25,20 +74,20 @@ def desserts(request):
     return render(request, 'desserts.html', {'recipes': recipes})
 
 # add recipe page
+@custom_login_required
 def add_recipe(request):
     form = RecipeForm()
     if request.method == 'POST':
         form=RecipeForm(request.POST, request.FILES)
         if form.is_valid():
             recipe = form.save()
-            messages.success(
-                request,
-                f'Your recipe "{recipe.name}" has been added to the "{recipe.category}" page.'
-            )
-            form=RecipeForm()
+            messages.success(request,
+                f'Your recipe "{recipe.name}" has been added to the "{recipe.category}" page.')
+            form=redirect('add_recipe')
     return render(request, 'add_recipe.html', {'form':form})
 
 # delete recipe page
+@custom_login_required
 def delete(request):
     if request.method == 'POST':
         recipe_ids = request.POST.getlist("recipe_id")
@@ -51,6 +100,7 @@ def delete(request):
     return render(request, 'delete.html', {'recipes': recipes})
 
 # get recipes for edit page
+@custom_login_required
 def recipe_details(request, recipe_id):
         recipe = get_object_or_404(Recipe, pk=recipe_id)
         data = {
@@ -63,11 +113,13 @@ def recipe_details(request, recipe_id):
         return JsonResponse(data)
 
 # edit recipe page
+@custom_login_required
 def edit_recipe(request):
     recipes = Recipe.objects.all()
     return render(request, 'edit_recipe.html', {'recipes': recipes})
 
 # update recipe
+@custom_login_required
 def update_recipe(request, recipe_id):
     if request.method == 'POST':
         recipe = get_object_or_404(Recipe, pk=recipe_id)
@@ -78,3 +130,9 @@ def update_recipe(request, recipe_id):
         else:
             return JsonResponse({'success': False, 'errors': form.errors}, status=400)
     return JsonResponse({'error': 'Invalid request'}, status=405)
+
+#logout 
+def logout_view(request):
+    logout(request)
+    messages.success(request, "You have been logged out")
+    return redirect('index')

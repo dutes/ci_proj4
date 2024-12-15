@@ -2,12 +2,14 @@
 
 {% block content %}
 <div class="container">
-    {%if messages %}
+    {% if messages %}
     <div class="toast-container">
         {% for message in messages %}
-        <div class="toast-message alert alert-success" role="alert">
-            {{ message }}
-        </div>
+            {% if 'added to' in message %} {# Only show success messages for recipe addition #}
+                <div class="toast-message alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
         {% endfor %}
     </div>
     {% endif %}
@@ -85,16 +87,6 @@
         } else {
             imagePreview.src = 'https://via.placeholder.com/100';
         }
-    });
-
-    //function to auto dismiss the toast message after 5sec
-    document.addEventListener('DOMContentLoaded', function () {
-        const alerts = document.querySelectorAll('.alert');
-        alerts.forEach(alert => {
-            setTimeout(() => {
-                alert.style.display='none';
-            }, 5000);
-        });
     });
 </script>
 {% endblock %}
