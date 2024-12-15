@@ -13,6 +13,19 @@ DATABASES={
 #static file & whitenoise 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+#google cloud bucket settings
+GS_BUCKET_NAME = os.getenv('GS_BUCKET_NAME')
+GOOGLE_APPLICATION_CREDENTIALS_BASE64 = os.getenv('GOOGLE_APPLICATION_CREDENTIALS_BASE64')
+
+if GOOGLE_APPLICATION_CREDENTIALS_BASE64:
+    creds_file_path = os.path.join(BASE_DIR, 'google-key.json')
+    with open(creds_file_path, 'wb') as creds_file:
+        creds_file.write(base64.b64decode(GOOGLE_APPLICATION_CREDENTIALS_BASE64))
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_file(creds_file_path)
+
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
+
 #heroku config
 django_heroku.settings(locals())
 
