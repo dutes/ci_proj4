@@ -3,9 +3,9 @@
 {% block content %}
 <div class="container">
     {%if messages %}
-    <div class="alert-container">
+    <div class="toast-container">
         {% for message in messages %}
-        <div class="alert alert-success" role="alert">
+        <div class="toast-message alert alert-success" role="alert">
             {{ message }}
         </div>
         {% endfor %}

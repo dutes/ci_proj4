@@ -15,11 +15,27 @@
         display: none;
     }
 }
+/* style for toast messages */
+.toast.container {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    top:20%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index: 9995;
+    width: 100%;
+    pointer-events: none;
+}
 
-.alert-success {
-    background-color: #11a311; /* Custom green */
-    color: #ffffff;          /* Custom text color */
-    border-color: #171b18;   /* Custom border color */
-    font-weight: bold;
+.toast-message{
+    background-color: #11a311; 
+    color: #ffffff;    
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    max-width: 80%;
     text-align: center;
+    word-wrap: break-word;
+    pointer-events: all;
 }
