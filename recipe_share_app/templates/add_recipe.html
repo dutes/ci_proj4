@@ -2,6 +2,17 @@
 
 {% block content %}
 <div class="container">
+    {%if messages %}
+    <div class="alert-container">
+        {% for messages in messages %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+
     <h2 class="text-center">Add a New Recipe</h2>
     <p>Welcome to the add recipe page, please share any great dishes you might want to</p>
 
@@ -74,6 +85,16 @@
         } else {
             imagePreview.src = 'https://via.placeholder.com/100';
         }
+    });
+
+    //function to auto dismiss the toast message after 5sec
+    document.addEventListener('DOMContentLoaded', function () {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                alert.style.display='none';
+            }, 5000);
+        });
     });
 </script>
 {% endblock %}

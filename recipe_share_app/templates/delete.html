@@ -2,6 +2,16 @@
 
 {% block content %}
 <div class="container">
+    {%if messages %}
+    <div class="alert-container">
+        {% for messages in messages %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <h1 class="text-center">Delete Recipes</h1>
 
     <!--list with delete buttons-->
@@ -60,6 +70,14 @@
         if (selectedRecipeId) {
             deleteForm.submit();
             }
+        });
+
+    //dismiss toast after 5 sec
+    const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000); // 5 seconds
         });
     });
 </script>

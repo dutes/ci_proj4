@@ -26,15 +26,17 @@ def desserts(request):
 
 # add recipe page
 def add_recipe(request):
+    form = RecipeForm()
     if request.method == 'POST':
-        form = RecipeForm(request.POST, request.FILES)
+        form=RecipeForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('index')
-    else:
-        form = RecipeForm()
-    print("this is the for, ", form)#debugging
-    return render(request, 'add_recipe.html', {'form': form})
+            recipe = form.save()
+            messages.success(
+                request,
+                f'Your recipe "{recipe.name}" has been added to the "{recipe.category}" page.'
+            )
+            form=RecipeForm()
+    return render(request, 'add_recipe.html', {'form':form})
 
 # delete recipe page
 def delete(request):
@@ -42,7 +44,7 @@ def delete(request):
         recipe_ids = request.POST.getlist("recipe_id")
         if recipe_ids:
             Recipe.objects.filter(id__in=recipe_ids).delete()
-            messages.success(request, 'Selected recipes have been deleted')
+            messages.success(request, 'Selected recipe was deleted')
         return redirect('index')
     
     recipes = Recipe.objects.all()
@@ -50,7 +52,6 @@ def delete(request):
 
 # get recipes for edit page
 def recipe_details(request, recipe_id):
-    try:
         recipe = get_object_or_404(Recipe, pk=recipe_id)
         data = {
             "name": recipe.name,
@@ -60,8 +61,6 @@ def recipe_details(request, recipe_id):
             "image": recipe.image.url if recipe.image else "",
         }
         return JsonResponse(data)
-    except Recipe.DoesNotExist:
-        return JsonResponse({'error': 'Recipe not found'}, status=404)
 
 # edit recipe page
 def edit_recipe(request):
