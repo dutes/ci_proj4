@@ -133,5 +133,5 @@ django_heroku.settings(locals())
 #session settings
 SESSION_ENGINE='django.contrib.sessions.backends.db'
 SESSION_COOKIE_HTTPPONLY = True
-SESSION_COOKIE_SECURE=False
-CSRF_COOKIE_SCENE=False
+SESSION_COOKIE_SECURE= not DEBUG
+CSRF_COOKIE_SECURE= not DEBUG
