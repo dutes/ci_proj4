@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from .models import Recipe
 from .forms import RecipeForm
+import re
 
 def custom_login_required(view_func):
     def wrapper(request, *args, **kwargs):
@@ -24,9 +25,17 @@ def index(request):
     signup_form = UserCreationForm(prefix='signup')  
 
     if request.method == "POST":
+        # AJAX validation
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            signup_form = UserCreationForm(request.POST, prefix='signup')
+            if signup_form.is_valid():
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'errors': signup_form.errors.get_json_data()})
+        
         # Handle Login Form
         if "login" in request.POST:
-            login_form = AuthenticationForm(data=request.POST, prefix='login')  
+            login_form = AuthenticationForm(data=request.POST, prefix='login')
             if login_form.is_valid():
                 user = login_form.get_user()
                 login(request, user)
@@ -34,21 +43,17 @@ def index(request):
                 return redirect('index')
             else:
                 messages.error(request, "Login failed, please check your username and password.")
-        
+                
         # Handle Signup Form
         elif "signup" in request.POST:
-            # Explicitly handle prefixed POST data
             signup_form = UserCreationForm(request.POST, prefix='signup')
             if signup_form.is_valid():
                 user = signup_form.save()
-                login(request, user)  # Log in the user
+                login(request, user)
                 return redirect('index')
-            else:
-                #dupe username check
-                if 'username' in signup_form.errors:
-                    messages.error(request, "this username already exsists, please chose another.")
-                else:
-                    messages.error(request, "Sign-up failed. Please correct the errors and try again.")
+            # Fallback for non-AJAX requests
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'errors': signup_form.errors.get_json_data()})
 
     return render(request, 'index.html', {'login_form': login_form, 'signup_form': signup_form})
 
