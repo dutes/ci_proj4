@@ -138,6 +138,10 @@ def update_recipe(request, recipe_id):
 
 #logout 
 def logout_view(request):
+    #clear old toasts
+    storage = messages.get_messages(request)
+    list(storage)
+    #logout user and pop toast
     logout(request)
     messages.success(request, "You have been logged out")
     return redirect('index')

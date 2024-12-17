@@ -18,6 +18,7 @@
                 <div class="toast-body">
                     {{ message }}
                 </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         </div>
         {% endfor %}
@@ -225,12 +226,20 @@ data-bs-backdrop="static" data-bs-keyboard="false">
         });
 
         // Toast dismissal logic
+        const toastContainer = document.querySelector(".toast-container");
         const toastElements = document.querySelectorAll(".toast");
-        toastElements.forEach((toastEl) => {
-            const toast = new bootstrap.Toast(toastEl, { delay: 5000 }); // Auto-dismiss after 5 seconds
+        //if toast is present, auto dismiss after 5 seconds
+        if (toastElements.length) {
+            const toast = new bootstrap.Toast(toastElements[0], { delay: 5000 }); // Auto-dismiss after 5 seconds
             toast.show();
-        });
+        }
+        //clear old toasts
+        setTimeout(() => {
+            while (toastContainer.firstChild) {
+                toastContainer.removeChild(toastContainer.firstChild);
+            }
+        }, 3500);
+        
     });
 </script>
-
 {% endblock %}
