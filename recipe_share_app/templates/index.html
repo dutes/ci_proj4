@@ -2,122 +2,117 @@
 
 {% block content %}
 <div class="container text-center">
-    <h1>Welcome to the Recipe Sharing App!</h1>
+    <h1> Welcome to the Recipe Share App!</h1>
     {% if user.is_authenticated %}
-        <h2> Welcome, {{ user.username }}! Please contribute by adding a recipe.</h2>
+        <h2>Welcome, {{ user.username }}! Please contribute by adding a recipe.</h2>
     {% else %}
-        <p>If you don't have an account, please create one to be able to add, view or delete recipes. Otherwise, login to contribute</p>
+        <p>If you don't have an account, please create one to be able to add, view, edit or delete a recipe.</p>
 
 <!-- toast messages -->
-{% if messages %}
-<div aria-live="polite" aria-atomic="true" class="position-relative">
-    <div class="toast-container position-absolute top-0 start-0 p-3">
-        {% for message in messages %}
-        <div class="toast align-items-center text-white bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    {{ message }}
+        {% if messages %}
+        <div aria-live="polite" aria-atomic="true" class="position-relative">
+            <div class="toast-container position-absolute top-0 start-0 p-3">
+                {% for message in messages %}
+                <div class="toast align-items-center test-white bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">{{ message }}</div>
+                        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
         </div>
-        {% endfor %}
-    </div>
-</div>  
-{% endif %}
+        {% endif %}
 
-<!-- buttons to open login and create views-->
+        <!--- buttons to open login and signup modals -->
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
-         <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</button>
+        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</button>
     {% endif %}
 </div>
 
-<!-- Login Modal -->
-<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true" 
+<!---login modal-->
+<div class="modal fade" id="loginModal" tabindex='-1' aria-labelledby="loginModalLabel" aria-hidden='true'
 data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered"> <!-- Centered modal -->
+    <div class="modal-dialog modal-dialog-centered"> 
         <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header bg-primary text-white"> <!-- Added background color -->
-                <h5 class="modal-title" id="loginModalLabel">Login</h5>
-                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-title" id="loginModalLabel">
+                <h5 class="modal-title">Login</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            
-            <!-- Modal Body -->
-            <div class="modal-body">
+             <!--modal body-->   
+            <div class='modal-body'>
                 <form method="post" action="{% url 'index' %}" class="p-3">
                     {% csrf_token %}
-                    
-                    <!-- Username Field -->
+                    <!---username field-->
                     <div class="mb-3">
                         <label for="id_login-username" class="form-label fw-semibold">Username</label>
-                        <input type="text" name="login-username" class="form-control" id="id_login-username" 
-                               placeholder="Enter your username" autocomplete="username" required>
+                        <input type="text" name="login-username" id="id_login-username" class="form-control" 
+                        placeholder="Enter your username" autocomplete="username" required>
                     </div>
-                    
-                    <!-- Password Field -->
+                    <!---password field-->
                     <div class="mb-3">
-                        <label for="id_login-password" class="form-label fw-semibold">Password</label>
-                        <input type="password" name="login-password" class="form-control" id="id_login-password" 
-                               placeholder="Enter your password" autocomplete="new-password" required>
+                        <label for="id_login-password" class="form-label">Password</label>
+                        <input type="password" name="login-password" id="id_login-password" class="form-control" 
+                        placeholder="Enter your password" autocomplete="new-password" required>
                     </div>
-                    
-                    <!-- Submit and Cancel Buttons -->
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button type="submit" name="login" class="btn btn-primary w-100">Login</button>
-                        <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancel</button>
+                   <!---submit button-->
+                    <div class="d-grip gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" name="login" class="btn btn-primary w-100">Login</button>
+                    <button type="button" class="btn-secondary w-100" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+
+                    <!--modal footer-->
+                    <div class="modal-footer text-center">
+                        <p class="small text-muuted w-100">
+                            Don't have an account? <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</a>
+                        </p>
                     </div>
                 </form>
-            </div>
-
-            <!-- Modal Footer -->
-            <div class="modal-footer text-center">
-                <p class="small text-muted w-100">
-                    Don't have an account? <a href="#" class="text-primary" data-bs-toggle="modal" data-bs-target="#signupModal">Sign up here</a>
-                </p>
             </div>
         </div>
     </div>
 </div>
 
-
-<!-- Sign-up Modal -->
+<!---signup modal-->
 <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true"
 data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="signupModalLabel">Sign Up</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="post" action="{% url 'index' %}" id="signup-form">
-                    {% csrf_token %}
-                    <!--username-->
-                    <div class="mb-3">
-                        <label for="id_signup_username" class="form-label">Username</label>
-                        <input type="text" name="signup-username" class="form-control" id="id_signup_username"
-                            placeholder="Choose a username" autocomplete="username" required>
-                            <div id="username-feedback" class="form-text text-danger"></div>
-                    </div>
-                    <!--password-->
-                    <!--{{ signup_form.as_p }}  Ensures prefixed form fields are rendered correctly -->
-                     <div class="mb-3">
-                        <label for="id_signup_password1"class="form-label"> Password</label>
-                        <input type="password" name="signup-password1" class="form-control" id="id_signup_password1"
-                            placeholder="Enter a strong password" autocomplete="new-password" required>
-                     </div>
-                     <!--password confirmation-->
-                     <div class="mb-3">
-                        <label for="id_signup_password2"class="form-label"> Password</label>
-                        <input type="password" name="signup-password2" class="form-control" id="id_signup_password2"
-                            placeholder="Re-enter your password" autocomplete="new-password" required>
-                        <div id="password-validation-feedback" class="form-text text-danger"></div>
-                     </div>
-                    <div class="text-end">
-                        <button type="submit" name="signup" class="btn btn-primary">Sign Up</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
+            <div class=modal"content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="signupModalLabel">Sign Up</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'index' %}" id="signup-form">
+                        {% csrf_token %}
+                        <!---username field-->
+                        <div class="mb-3">
+                            <label for="id_signup-username" class="form-label fw-semibold">Username</label>
+                            <input type="text" name="signup-username" id="id_signup-username" class="form-control" 
+                            placeholder="Enter your username" autocomplete="username" required>
+                            <div id="username-feedback" class="invalid-feedback"></div>
+                        </div>
+                        <!---passwords-->
+                        <!---password1 field-->
+                        <div class="mb-3">
+                            <label for="signup-password1" class="form-label">Password</label>
+                            <input type="password" name="signup-password1" id="signup-password1" class="form-control"
+                            placeholder="Enter your password" autocomplete="new-password" required>
+                        </div>
+                        <!---password2 field-->
+                        <div class="mb-3">
+                            <label for="signup-password2" class="form-label">Confirm Password</label>
+                            <input type="password" name="signup-password2" id="signup-password2" class="form-control"
+                            placeholder="Confirm your password" autocomplete="new-password" required>
+                            <div id="password-feedback" class="form-text text-danger"></div>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" name="signup" class="btn btn-primary">Sign Up</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -125,47 +120,55 @@ data-bs-backdrop="static" data-bs-keyboard="false">
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const signupForm = document.getElementById("signup-form"); // Signup form
-        const signupModal = document.getElementById("signupModal"); // Signup modal
-
-        const usernameField = document.getElementById("id_signup_username"); // Username field
-        const usernameFeedback = document.getElementById("username-feedback"); // Dynamic feedback for username
-
-        const passwordField = document.getElementById("id_signup_password1");
-        const passwordConfirmationField = document.getElementById("id_signup_password2");
-        const passwordFeedback = document.getElementById("password-validation-feedback");
-
-        const loginForm = document.querySelector("form[action='{% url 'index' %}']"); // Login form
-        const loginModal = document.getElementById("loginModal"); // Login modal
-
-        const loginUsernameField = document.getElementById("id_login-username"); // Login username field
-        const loginPasswordField = document.getElementById("id_login-password"); // Login password field
-
-
-        //funciton to clear fields when modal is closed
-        function clearForm(form, feedbackElements =[]) {
-            form.reset();
+        const signupForm = document.getElementById("signup-form");
+        const signupModal = document.getElementById("signupModal");
+        const loginForm = document.querySelector("form[action='{% url 'index' %}']");
+        const loginModal = document.getElementById("loginModal");
+    
+        const usernameField = document.getElementById("id_signup-username");
+        const usernameFeedback = document.getElementById("username-feedback");
+    
+        const password1Field = document.getElementById("signup-password1");
+        const passwordConfirmationField = document.getElementById("signup-password2");
+        const passwordFeedback = document.getElementById("password-feedback");
+    
+        function clearForm(form, feedbackElements = []) {
+            if (form) form.reset();
             feedbackElements.forEach((element) => {
-                element.textContent = "";
+                if (element) element.textContent = "";
             });
         }
-
-        // add listener for signup modal
-        signupModal.querySelector(".btn-close").addEventListener("Click", ()=> clearForm(signupForm, [usernameFeedback, passwordFeedback]));
-        signupModal.querySelector("button[data-bs-dismiss='modal']").addEventListener("Click", ()=> clearForm(signupForm, [usernameFeedback, passwordFeedback]));
-        signupModal.addEventListener("hidden.bs.modal", ()=> clearForm(signupForm, [usernameFeedback, passwordFeedback]));
-
-        // add listener for login modal
-        loginModal.querySelector(".btn-close").addEventListener("Click", ()=> clearForm(loginForm));
-        loginModal.querySelector("button[data-bs-dismiss='modal']").addEventListener("Click", ()=> clearForm(loginForm));
-        loginModal.addEventListener("hidden.bs.modal", ()=> clearForm(loginForm));
-        
-
-        // Password validation
+    
+        // Clear forms on modal close
+        signupModal.addEventListener("hidden.bs.modal", () => {
+            console.log("Signup modal closed");
+            clearForm(signupForm, [usernameFeedback, passwordFeedback]);
+        });
+    
+        loginModal.addEventListener("hidden.bs.modal", () => {
+            console.log("Login modal closed");
+            clearForm(loginForm);
+        });
+    
+        usernameField.addEventListener("input", () => {
+            const username = usernameField.value.trim();
+            const usernameRegex = /^[a-zA-Z0-9_]{5,20}$/;
+    
+            if (username.length < 5) {
+                usernameFeedback.textContent = "Username must be at least 5 characters long.";
+            } else if (username.length > 20) {
+                usernameFeedback.textContent = "Username must be at most 20 characters long.";
+            } else if (!usernameRegex.test(username)) {
+                usernameFeedback.textContent = "Username must only contain letters, numbers, and underscores.";
+            } else {
+                usernameFeedback.textContent = "";
+            }
+        });
+    
         function validatePassword() {
-            const password = passwordField.value;
+            const password = password1Field.value;
             const confirmPassword = passwordConfirmationField.value;
-
+    
             if (password.length < 8) {
                 passwordFeedback.textContent = "Password must be at least 8 characters long.";
             } else if (password !== confirmPassword) {
@@ -174,63 +177,28 @@ data-bs-backdrop="static" data-bs-keyboard="false">
                 passwordFeedback.textContent = "";
             }
         }
-
-        passwordField.addEventListener("input", validatePassword);
+    
+        password1Field.addEventListener("input", validatePassword);
         passwordConfirmationField.addEventListener("input", validatePassword);
-
-        // Username validation and AJAX form submission
-        signupForm.addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent the form from submitting
-
-            const formData = new FormData(signupForm);
-            const url = "{% url 'index' %}";
-
-            fetch(url, {
-                method: "POST",
-                body: formData,
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest",
-                },
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.success) {
-                        usernameFeedback.textContent = "";
-                        passwordFeedback.textContent = "";
-                        alert("Account created successfully. You are now logged in.");
-                        location.reload(); // Reload the page
-                    } else {
-                        if (data.errors.username) {
-                            usernameFeedback.textContent = Object.values(data.errors.username)
-                                .map((err) => err.message)
-                                .join(", ");
-                        } else {
-                            usernameFeedback.textContent = "";
-                        }
-
-                        if (data.errors.password1 || data.errors.password2) {
-                            passwordFeedback.textContent =
-                                (Object.values(data.errors.password1 || {})
-                                    .map((err) => err.message)
-                                    .join(", ")) +
-                                (Object.values(data.errors.password2 || {})
-                                    .map((err) => err.message)
-                                    .join(", "));
-                        } else {
-                            passwordFeedback.textContent = "";
-                        }
-                    }
-                })
-                .catch((error) => console.error("Error:", error));
-        });
-
-        // Toast dismissal logic
-        const toastElements = document.querySelectorAll(".toast");
-        toastElements.forEach((toastEl) => {
-            const toast = new bootstrap.Toast(toastEl, { delay: 5000 }); // Auto-dismiss after 5 seconds
-            toast.show();
-        });
     });
-</script>
+    
+    
 
+//toast messages
+const toastContainer = document.querySelector(".toast-container");
+const toastElements = toastContainer.querySelectorAll(".toast");
+//if toast is present, auto dismiss after 5 seconds
+if (toastElements.length) {
+    const toast = new bootstrap.Toast(toastElements[0], { delay: 5000 });
+    toast.show();
+}
+//clear old toast
+setTimeout(() => {
+    while (toastContainer.firstChild) {
+        toastContainer.removeChild(toastContainer.firstChild);
+        }
+    }, 3500);
+});
+
+</script>
 {% endblock %}

@@ -25,36 +25,40 @@ def index(request):
     signup_form = UserCreationForm(prefix='signup')  
 
     if request.method == "POST":
-        # AJAX validation
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            signup_form = UserCreationForm(request.POST, prefix='signup')
-            if signup_form.is_valid():
-                return JsonResponse({'success': True})
-            else:
-                return JsonResponse({'success': False, 'errors': signup_form.errors.get_json_data()})
-        
-        # Handle Login Form
-        if "login" in request.POST:
+        # handle login form
+        is_ajax_request = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        if 'login' in request.POST:
             login_form = AuthenticationForm(data=request.POST, prefix='login')
             if login_form.is_valid():
                 user = login_form.get_user()
                 login(request, user)
-                messages.success(request, "You have logged in successfully!")
-                return redirect('index')
+                if is_ajax_request:
+                    return JsonResponse({'success': True})
+                else:
+                    messages.success(request, "You have logged in successfully!")
+                    return redirect('index')
             else:
-                messages.error(request, "Login failed, please check your username and password.")
-                
+                if is_ajax_request:
+                    return JsonResponse({'success': False, 'errors': login_form.errors.get_json_data()})
+                else:
+                    messages.error(request, "Login failed, please check your username and password.") 
         # Handle Signup Form
         elif "signup" in request.POST:
             signup_form = UserCreationForm(request.POST, prefix='signup')
             if signup_form.is_valid():
                 user = signup_form.save()
                 login(request, user)
-                return redirect('index')
-            # Fallback for non-AJAX requests
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({'success': False, 'errors': signup_form.errors.get_json_data()})
-
+                if is_ajax_request:
+                    return JsonResponse({'success': True})
+                else:
+                    return redirect('index')
+        else:
+            if is_ajax_request:
+                return JsonResponse({'success': False, 'errors': signup_form.errors.get_json_data()}) 
+            else:
+                messages.error(request, "signup failed, please check your details.")
+        if is_ajax_request:
+            return JsonResponse({'success': False, 'errors': login_form.errors.get_json_data()})
     return render(request, 'index.html', {'login_form': login_form, 'signup_form': signup_form})
 
 # logout view
@@ -88,7 +92,7 @@ def add_recipe(request):
             recipe = form.save()
             messages.success(request,
                 f'Your recipe "{recipe.name}" has been added to the "{recipe.category}" page.')
-            form=redirect('add_recipe')
+            return redirect('add_recipe')
     return render(request, 'add_recipe.html', {'form':form})
 
 # delete recipe page
@@ -136,8 +140,3 @@ def update_recipe(request, recipe_id):
             return JsonResponse({'success': False, 'errors': form.errors}, status=400)
     return JsonResponse({'error': 'Invalid request'}, status=405)
 
-#logout 
-def logout_view(request):
-    logout(request)
-    messages.success(request, "You have been logged out")
-    return redirect('index')
