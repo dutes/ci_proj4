@@ -6,8 +6,16 @@
     {% if user.is_authenticated %}
         <h2>Welcome, {{ user.username }}! Please contribute by adding a recipe.</h2>
     {% else %}
-        <p>If you don't have an account, please create one to be able to add, view, edit or delete a recipe.</p>
-
+        <div style="max-width: 800px; margin:0 auto; padding: 20px; text-align: center;">
+            <p>Welcome to the Recipe Sharing Platform, where the aroma of creativity meets the warmth of togetherness.</P>
+            <p>Cooking isn’t just about combining ingredients; it’s about crafting moments, sparking smiles, and sharing love with every bite. 
+                Whether it’s a family dinner, a celebration with friends, or a quiet moment for yourself, the joy of creating something 
+                delicious is unmatched.</p>
+            <p>Here, you’ll find a treasure trove of recipes to inspire your inner chef and delight your loved ones. 
+                After all, a shared meal is more than just food on a plate—it’s a heartfelt connection on the table. 
+                Let’s cook, share, and savor the simple joys of life, one recipe at a time.</p>
+            <h2>Log in or sign up to add, view, edit, or delete a recipe.</h2>
+        </div>
 <!-- toast messages -->
         {% if messages %}
         <div aria-live="polite" aria-atomic="true" class="position-relative">
@@ -32,39 +40,40 @@
 
 <!---login modal-->
 <div class="modal fade" id="loginModal" tabindex='-1' aria-labelledby="loginModalLabel" aria-hidden='true'
-data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered"> 
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-title" id="loginModalLabel">
-                <h5 class="modal-title">Login</h5>
+            <!-- Unified Header -->
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="loginModalLabel">Login</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-             <!--modal body-->   
+            <!-- Modal Body -->
             <div class='modal-body'>
-                <form method="post" action="{% url 'index' %}" class="p-3">
+                <form method="post" action="{% url 'index' %}" class="p-3" id="login-form">
                     {% csrf_token %}
-                    <!---username field-->
+                    <!-- Username Field -->
                     <div class="mb-3">
                         <label for="id_login-username" class="form-label fw-semibold">Username</label>
-                        <input type="text" name="login-username" id="id_login-username" class="form-control" 
-                        placeholder="Enter your username" autocomplete="username" required>
+                        <input type="text" name="login-username" id="id_login-username" class="form-control"
+                            placeholder="Enter your username" autocomplete="username" required>
                     </div>
-                    <!---password field-->
+                    <!-- Password Field -->
                     <div class="mb-3">
                         <label for="id_login-password" class="form-label">Password</label>
-                        <input type="password" name="login-password" id="id_login-password" class="form-control" 
-                        placeholder="Enter your password" autocomplete="new-password" required>
+                        <input type="password" name="login-password" id="id_login-password" class="form-control"
+                            placeholder="Enter your password" autocomplete="new-password" required>
                     </div>
-                   <!---submit button-->
-                    <div class="d-grip gap-2 d-md-flex justify-content-md-end">
-                    <button type="submit" name="login" class="btn btn-primary w-100">Login</button>
-                    <button type="button" class="btn-secondary w-100" data-bs-dismiss="modal">Cancel</button>
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="submit" name="login" class="btn btn-primary w-50">Login</button>
+                        <button type="button" class="btn btn-secondary w-50" data-bs-dismiss="modal">Cancel</button>
                     </div>
-
-                    <!--modal footer-->
+                    <!-- Footer -->
                     <div class="modal-footer text-center">
-                        <p class="small text-muuted w-100">
-                            Don't have an account? <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</a>
+                        <p class="small text-muted w-100">
+                            Don't have an account? <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal"
+                                data-bs-target="#signupModal">Sign Up</a>
                         </p>
                     </div>
                 </form>
@@ -78,7 +87,6 @@ data-bs-backdrop="static" data-bs-keyboard="false">
 data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class=modal"content">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="signupModalLabel">Sign Up</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -91,7 +99,7 @@ data-bs-backdrop="static" data-bs-keyboard="false">
                             <label for="id_signup-username" class="form-label fw-semibold">Username</label>
                             <input type="text" name="signup-username" id="id_signup-username" class="form-control" 
                             placeholder="Enter your username" autocomplete="username" required>
-                            <div id="username-feedback" class="invalid-feedback"></div>
+                            <div id="username-feedback" class="form-text text-danger"></div>
                         </div>
                         <!---passwords-->
                         <!---password1 field-->
@@ -105,10 +113,11 @@ data-bs-backdrop="static" data-bs-keyboard="false">
                             <label for="signup-password2" class="form-label">Confirm Password</label>
                             <input type="password" name="signup-password2" id="signup-password2" class="form-control"
                             placeholder="Confirm your password" autocomplete="new-password" required>
-                            <div id="password-feedback" class="form-text text-danger"></div>
+                            <div id="password2-feedback" class="form-text text-danger"></div>
+                            <div id="password1-feedback" class="form-text text-danger"></div>
                         </div>
                         <div class="text-end">
-                            <button type="submit" name="signup" class="btn btn-primary">Sign Up</button>
+                            <button type="submit" name="signup" id="signup-submit" class="btn btn-primary" disabled>Sign Up</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         </div>
                     </form>
@@ -122,83 +131,88 @@ data-bs-backdrop="static" data-bs-keyboard="false">
     document.addEventListener("DOMContentLoaded", function () {
         const signupForm = document.getElementById("signup-form");
         const signupModal = document.getElementById("signupModal");
-        const loginForm = document.querySelector("form[action='{% url 'index' %}']");
-        const loginModal = document.getElementById("loginModal");
-    
         const usernameField = document.getElementById("id_signup-username");
         const usernameFeedback = document.getElementById("username-feedback");
-    
         const password1Field = document.getElementById("signup-password1");
-        const passwordConfirmationField = document.getElementById("signup-password2");
-        const passwordFeedback = document.getElementById("password-feedback");
+        const password2Field = document.getElementById("signup-password2");
+        const password1Feedback = document.getElementById("password1-feedback");
+        const password2Feedback = document.getElementById("password2-feedback");
+        const submitButton = document.getElementById("signup-submit");
     
-        function clearForm(form, feedbackElements = []) {
-            if (form) form.reset();
-            feedbackElements.forEach((element) => {
-                if (element) element.textContent = "";
-            });
-        }
+        const USERNAME_REGEX = /^[a-zA-Z0-9_]{5,20}$/;
     
-        // Clear forms on modal close
-        signupModal.addEventListener("hidden.bs.modal", () => {
-            console.log("Signup modal closed");
-            clearForm(signupForm, [usernameFeedback, passwordFeedback]);
-        });
+        function validateForm() {
+            let isValid = true;
     
-        loginModal.addEventListener("hidden.bs.modal", () => {
-            console.log("Login modal closed");
-            clearForm(loginForm);
-        });
-    
-        usernameField.addEventListener("input", () => {
+            // Username validation
             const username = usernameField.value.trim();
-            const usernameRegex = /^[a-zA-Z0-9_]{5,20}$/;
-    
             if (username.length < 5) {
-                usernameFeedback.textContent = "Username must be at least 5 characters long.";
+                usernameFeedback.textContent = "Username should be at least 5 characters.";
+                isValid = false;
             } else if (username.length > 20) {
-                usernameFeedback.textContent = "Username must be at most 20 characters long.";
-            } else if (!usernameRegex.test(username)) {
-                usernameFeedback.textContent = "Username must only contain letters, numbers, and underscores.";
+                usernameFeedback.textContent = "Username should be under 20 characters.";
+                isValid = false;
+            } else if (!USERNAME_REGEX.test(username)) {
+                usernameFeedback.textContent = "Only letters, numbers, and underscores are allowed.";
+                isValid = false;
             } else {
                 usernameFeedback.textContent = "";
             }
-        });
     
-        function validatePassword() {
-            const password = password1Field.value;
-            const confirmPassword = passwordConfirmationField.value;
+            // Password validation
+            const password1 = password1Field.value.trim();
+            const password2 = password2Field.value.trim();
     
-            if (password.length < 8) {
-                passwordFeedback.textContent = "Password must be at least 8 characters long.";
-            } else if (password !== confirmPassword) {
-                passwordFeedback.textContent = "Passwords do not match.";
+            if (password1.length < 8) {
+                password1Feedback.textContent = "Password should be at least 8 characters.";
+                isValid = false;
             } else {
-                passwordFeedback.textContent = "";
+                password1Feedback.textContent = "";
             }
+    
+            if (password1 !== password2) {
+                password2Feedback.textContent = "Passwords do not match.";
+                isValid = false;
+            } else {
+                password2Feedback.textContent = "";
+            }
+    
+            // Enable or disable the submit button
+            submitButton.disabled = !isValid;
         }
     
-        password1Field.addEventListener("input", validatePassword);
-        passwordConfirmationField.addEventListener("input", validatePassword);
+        usernameField.addEventListener("input", validateForm);
+        password1Field.addEventListener("input", validateForm);
+        password2Field.addEventListener("input", validateForm);
+    
+        signupModal.addEventListener("hidden.bs.modal", () => {
+            signupForm.reset();
+            usernameFeedback.textContent = "";
+            password1Feedback.textContent = "";
+            password2Feedback.textContent = "";
+            submitButton.disabled = true;
+        });
     });
     
     
+    
 
-//toast messages
-const toastContainer = document.querySelector(".toast-container");
-const toastElements = toastContainer.querySelectorAll(".toast");
-//if toast is present, auto dismiss after 5 seconds
-if (toastElements.length) {
-    const toast = new bootstrap.Toast(toastElements[0], { delay: 5000 });
-    toast.show();
-}
-//clear old toast
-setTimeout(() => {
-    while (toastContainer.firstChild) {
-        toastContainer.removeChild(toastContainer.firstChild);
-        }
-    }, 3500);
-});
+  //toast messages
+  const toastContainer = document.querySelector(".toast-container");
+  if (toastContainer) {
+      const toastElements = toastContainer.querySelectorAll(".toast");
+      //if toast is present, auto dismiss after 5 seconds
+      if (toastElements.length) {
+          const toast = new bootstrap.Toast(toastElements[0], {delay: 5000});
+          toast.show();
+      }
+      //clear old toast
+      setTimeout(() => {
+          while (toastContainer.firstChild) {
+              toastContainer.removeChild(toastContainer.firstChild);
+          }
+      }, 3500);
 
+  }
 </script>
 {% endblock %}
